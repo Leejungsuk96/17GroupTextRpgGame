@@ -16,6 +16,10 @@ namespace _17GroupTextRpgGame
         public int Hp { get; }
         public int Gold { get; }
 
+        //죽은지 확인
+        public bool CheckDeath => Hp <= 0;
+        //플레이어 HP가 0인지 확인 -> if(_player.CheckDeath)
+
         public Character(string name, string job, int level, int atk, int def, int hp, int gold)
         {
             Name = name;

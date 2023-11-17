@@ -5,6 +5,7 @@
     {
         static Character _player;
         static Item[] _items;
+        static Monster _monster;
 
         static void Main(string[] args)
         {
