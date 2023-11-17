@@ -111,15 +111,64 @@ namespace _17GroupTextRpgGame
            
         static void StartOfTheBattle()
         {
-            //랜덤하게 소환된 몬스터 1~3마리와 싸우기.  
+            Console.Clear();
+            ShowHighlightedText("!! Bettle !!");
+            Console.WriteLine();
+
+            //1에서 4 사이의 몬스터를 무작위로 생성
+            int numberOfMonsters = new Random().Next(1, 5);
+            Monster[] monsters = new Monster[numberOfMonsters];
+
+            //생성된 몬스터 배열 저장
+            for (int i = 0; i < numberOfMonsters; i++)
+            {
+                //몬스터 생성 및 표시
+                Monster monster = GenerateRandomMonster();
+                monsters[i] = monster;
+            }
+            //몬스터 배열 정렬
+            Array.Sort(monsters, (m1, m2) => m1.Level.CompareTo(m2.Level));
+
+            //몬스터 상태 표시
+            for (int i = 0; i < numberOfMonsters; i++)
+            {
+                Console.WriteLine($"Lv.{monsters[i].Level} {monsters[i].Name} HP {monsters[i].Hp}");
+            }
+
+            Console.WriteLine("\n[내정보]");
+            PrintPlayerInfo();
+
+            static void PrintPlayerInfo()
+            {
+                Console.WriteLine($"Lv.{_player.Level} {_player.Name} ({_player.Job})");
+                Console.WriteLine($"HP {_player.Hp}/{_player.Hp}");
+                Console.WriteLine("\n0. 공격\n");
+                Console.Write("원하시는 행동을 입력해주세요.\n>> ");
+            }
+
+            switch (CheckValidInput(0, 0))
+
+            {
+                case 0:
+                    //공격();
+                    break; 
+            }
+
+            static Monster GenerateRandomMonster()
+            {
+                //필요에 따라 몬스터 추가
+                Monster[] possibleMonsters = { _monster1, _monster2, _monster3 };
+
+                //몬스터 배열에서 몬스터 무작위 선택
+                int randomIndex = new Random().Next(possibleMonsters.Length);
+                Monster selectedMonster = possibleMonsters[randomIndex];
+
+                //몬스터 인스턴스 생성
+                return new Monster(selectedMonster.Name, selectedMonster.Level, selectedMonster.Atk,
+                    selectedMonster.Def, selectedMonster.Hp, selectedMonster.Maxhp, selectedMonster.Exp,
+                    selectedMonster.Gold);
+            }
         }
-
-
-
-
-
-
-
         static int CheckValidInput(int min, int max)
         {
             /// 설명
