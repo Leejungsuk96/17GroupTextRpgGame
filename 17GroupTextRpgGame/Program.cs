@@ -1,4 +1,6 @@
-﻿namespace _17GroupTextRpgGame
+﻿using System.Threading;
+
+namespace _17GroupTextRpgGame
 {
     public class Character
     {
@@ -18,6 +20,31 @@
             Atk = atk;
             Def = def;
             Hp = hp;
+            Gold = gold;
+        }
+    }
+
+    //몬스터 클래스
+    public class Monster
+    {
+        public string Name { get; }
+        public int Level { get; }
+        public int Atk { get; }
+        public int Def { get; }
+        public int Hp { get; }
+        public int Maxhp { get; }
+        public int Exp { get; }
+        public int Gold { get; }
+
+        public Monster(string name, int level, int atk, int def, int hp, int maxhp, int exp, int gold)
+        {
+            Name = name;
+            Level = level;
+            Atk = atk;
+            Def = def;
+            Hp = hp;
+            Maxhp = maxhp;
+            Exp = exp;
             Gold = gold;
         }
     }
@@ -113,6 +140,9 @@
     {
         static Character _player;
         static Item[] _items;
+        static Monster _monster1;
+        static Monster _monster2;
+        static Monster _monster3;
 
         static void Main(string[] args)
         {
@@ -130,6 +160,12 @@
         static void GameDataSetting()
         {
             _player = new Character("chad", "전사", 1, 10, 5, 100, 1500);
+
+            //몬스터 3마리.
+            _monster1 = new Monster("미니언", 2, 5, 0, 15, 15, 100, 1000);
+            _monster2 = new Monster("공허충", 3, 9, 0, 10, 10, 200, 2000);
+            _monster3 = new Monster("대포미니언", 5, 8, 0, 25, 25, 300, 3000);
+
             _items = new Item[10];
             AddItem(new Item("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 0, 5, 0));
             AddItem(new Item("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", 1, 2, 0, 0));
@@ -152,6 +188,7 @@
             Console.WriteLine("");
             Console.WriteLine("1. 상태 보기");
             Console.WriteLine("2. 인벤토리");
+            Console.WriteLine("3. 던전 입장");
             Console.WriteLine("");
             // 1안 : 착한 유저들만 있을 경우
             // int keyInput = int.Parse(Console.ReadLine());
@@ -165,7 +202,7 @@
             //     result = int.TryParse(Console.ReadLine(), out keyInput);
             // } while (result == false || CheckIfValid(keyInput, min : 1, max : 2) == false);
 
-            switch (CheckValidInput(1, 2))
+            switch (CheckValidInput(1, 3))
             {
                 case 1:
                     StatusMenu();
@@ -173,8 +210,49 @@
                 case 2:
                     InventoryMenu();
                     break;
+                case 3:
+                    DungeonMenu();
+                    break;
             }
         }
+
+        //던전 메뉴
+        static void DungeonMenu()
+        {
+            Console.Clear();
+            ShowHighlightedText("■던전에 입장했습니다.■");
+            Console.WriteLine("몬스터가 나타났습니다.");
+            Console.WriteLine();
+            Console.WriteLine("0. 마을로 돌아가기.");
+            Console.WriteLine("1. 싸우기");
+            Console.WriteLine();
+
+            switch (CheckValidInput(0, 1)) 
+
+            {
+                case 0:
+                    StartMenu();
+                    break;
+                case 1:
+                    StartOfTheBattle();
+                    break;
+
+
+                 
+            }
+        }
+
+           
+        static void StartOfTheBattle()
+        {
+            //랜덤하게 소환된 몬스터 1~3마리와 싸우기.  
+        }
+
+
+
+
+
+
 
         static int CheckValidInput(int min, int max)
         {
