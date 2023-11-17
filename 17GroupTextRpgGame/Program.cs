@@ -23,9 +23,10 @@ namespace _17GroupTextRpgGame
             StartMenu();
         }
 
-        static void GameDataSetting()
+        static void GameDataSetting() // 최대체력 추가해줬어요.
         {
-            _player = new Character("chad", "전사", 1, 10, 5, 100, 1500);
+            _player = new Character("chad", "전사", 1, 10, 5, 100, 100, 1500);
+            
 
             //몬스터 3마리.
             _monster1 = new Monster("미니언", 2, 5, 0, 15, 15, 100, 1000);
@@ -111,9 +112,24 @@ namespace _17GroupTextRpgGame
            
         static void StartOfTheBattle()
         {
+            VictoryBattle(); // 승리조건을 스타트배틀에서 끌어다 쓸거 같아서 넣어뒀어요!
             //랜덤하게 소환된 몬스터 1~3마리와 싸우기.  
         }
 
+        static void VictoryBattle() //승리조건 구현 현재까진 몬스터가 1마리만 있을때만 했어요! 3마리는 좀더 고민해보겠습니다.
+        {
+            if (_player.Hp <= 0 || _monster1.Hp <= 0)
+            {
+                if (_player.Hp <= 0)
+                {
+                    Console.WriteLine("패배!");
+                }
+                else
+                {
+                    Console.WriteLine("승리!");
+                }
+            }
+        }
 
 
 
@@ -169,6 +185,8 @@ namespace _17GroupTextRpgGame
 
             int bonusHp = getSumBonusHp();
             PrintTextWithHighlights("체 력 : ", (_player.Hp + bonusHp).ToString(), bonusHp > 0 ? string.Format(" (+{0})", bonusHp) : "");
+
+            PrintTextWithHighlights("최대체력 : ", (_player.Maxhp + bonusHp).ToString(), bonusHp > 0 ? string.Format(" (+{0})", bonusHp) : "");
 
             PrintTextWithHighlights("Gold : ", _player.Gold.ToString());
             Console.WriteLine("");
