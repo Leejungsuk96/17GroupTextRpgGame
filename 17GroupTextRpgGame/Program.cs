@@ -112,32 +112,6 @@ namespace _17GroupTextRpgGame
            
         static void StartOfTheBattle()
         {
-<<<<<<< HEAD
-            VictoryBattle(); // 승리조건을 스타트배틀에서 끌어다 쓸거 같아서 넣어뒀어요!
-            //랜덤하게 소환된 몬스터 1~3마리와 싸우기.  
-        }
-
-        static void VictoryBattle() //승리조건 구현 현재까진 몬스터가 1마리만 있을때만 했어요! 3마리는 좀더 고민해보겠습니다.
-        {
-            if (_player.Hp <= 0 || _monster1.Hp <= 0)
-            {
-                if (_player.Hp <= 0)
-                {
-                    Console.WriteLine("패배!");
-                }
-                else
-                {
-                    Console.WriteLine("승리!");
-                }
-            }
-        }
-
-
-
-
-
-
-=======
             Console.Clear();
             ShowHighlightedText("!! Bettle !!");
             Console.WriteLine();
@@ -178,7 +152,7 @@ namespace _17GroupTextRpgGame
             {
                 case 0:
                     //공격();
-                    break; 
+                    break;
             }
 
             static Monster GenerateRandomMonster()
@@ -195,8 +169,26 @@ namespace _17GroupTextRpgGame
                     selectedMonster.Def, selectedMonster.Hp, selectedMonster.Maxhp, selectedMonster.Exp,
                     selectedMonster.Gold);
             }
+
+            VictoryBattle(); // 승리조건을 스타트배틀에서 끌어다 쓸거 같아서 넣어뒀어요!
+            //랜덤하게 소환된 몬스터 1~3마리와 싸우기.  
         }
->>>>>>> 2c831b6f85c3ebb7413c6292ed744e2408be05ed
+
+        static void VictoryBattle() //승리조건 구현 현재까진 몬스터가 1마리만 있을때만 했어요! 3마리는 좀더 고민해보겠습니다.
+        {
+            if (_player.Hp <= 0 || _monster1.Hp <= 0)
+            {
+                if (_player.Hp <= 0)
+                {
+                    Console.WriteLine("패배!");
+                }
+                else
+                {
+                    Console.WriteLine("승리!");
+                }
+            }
+        }
+
         static int CheckValidInput(int min, int max)
         {
             /// 설명
