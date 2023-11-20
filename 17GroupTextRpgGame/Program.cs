@@ -20,15 +20,30 @@ namespace _17GroupTextRpgGame
             /// 2. 선택 화면을 보여줌 (기본 구현사항 - 상태 / 인벤토리)
             /// 3. 상태화면을 구현함 (필요 구현 요소 : 캐릭터, 아이템)
             /// 4. 인벤토리 화면을 구현함
-            GameDataSetting();
             PrintStartLogo();
+            GameDataSetting();
             StartMenu();
         }
 
         static void GameDataSetting() // 최대체력 추가해줬어요.
         {
-            _player = new Character("chad", "전사", 1, 10, 5, 100, 100, 1500);
+            //유저 이름 적용
+            Console.Clear();
+            Console.WriteLine("스파르타 게임에 오신 것을 환영합니다.");
+            Console.WriteLine("플레이어의 닉네임을 적어주세요. ");
+            Console.Write(">> ");
+            string playerName = Console.ReadLine();
 
+            //직업 선택
+            Console.WriteLine();
+            Console.WriteLine("1. 전사  |  2. 법사  |  3. 도적");
+            Console.WriteLine("원하는 직업을 선택해주세요.");
+            Console.Write(">> ");
+            string jobChoice = Console.ReadLine();
+            if (jobChoice == "1") _player = new Character($"{playerName}", "전사", 1, 10, 5, 100, 100, 1500);
+            else if (jobChoice == "2") _player = new Character($"{playerName}", "법사", 1, 20, 5, 60, 60, 1500);
+            else if (jobChoice == "3") _player = new Character($"{playerName}", "도적", 1, 15, 5, 80, 80, 1500);
+            else Console.WriteLine("잘못된 입력입니다.");
 
             //몬스터 3마리.
             _monsters = new Monster[5];
@@ -41,8 +56,12 @@ namespace _17GroupTextRpgGame
 
             _items = new Item[10];
             AddItem(new Item("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 0, 5, 0));
-            AddItem(new Item("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", 1, 2, 0, 0));
             AddItem(new Item("골든 헬름", "희귀한 광석으로 만들어진 투구입니다.", 1, 0, 9, 0));
+
+            //직업에 맞는 무기 지급
+            if (_player.Job == "전사") AddItem(new Item("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", 1, 2, 0, 0));
+            else if (_player.Job == "법사") AddItem(new Item("낡은 스태프", "쉽게 구할 수 있는 낡은 스태프입니다.", 1, 5, 0, 0));
+            else if (_player.Job == "도적") AddItem(new Item("낡은 단검", "쉽게 볼 수 있는 낡은 단검입니다.", 1, 3, 0, 0));
         }
 
         static void StartMenu()
