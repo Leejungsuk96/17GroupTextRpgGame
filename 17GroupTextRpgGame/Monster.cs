@@ -17,6 +17,9 @@ namespace _17GroupTextRpgGame
         public int Exp { get; }
         public int Gold { get; }
 
+        public static int MonsterCnt = 0;
+       
+
         //죽음 여부 확인
         public bool CheckDeath => Hp <= 0;
         //if(_monster1.CheckDeath) return;

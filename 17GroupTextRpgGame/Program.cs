@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace _17GroupTextRpgGame
 {
@@ -6,6 +7,7 @@ namespace _17GroupTextRpgGame
     {
         static Character _player;
         static Item[] _items;
+        static Monster[] _monsters;
         static Monster _monster1;
         static Monster _monster2;
         static Monster _monster3;
@@ -26,9 +28,13 @@ namespace _17GroupTextRpgGame
         static void GameDataSetting() // 최대체력 추가해줬어요.
         {
             _player = new Character("chad", "전사", 1, 10, 5, 100, 100, 1500);
-            
+
 
             //몬스터 3마리.
+            _monsters = new Monster[5];
+            AddMonster(new Monster("미니언", 2, 5, 0, 15, 15, 100, 1000));
+            AddMonster(new Monster("공허충", 3, 9, 0, 10, 10, 200, 2000));
+            AddMonster(new Monster("대포미니언", 5, 8, 0, 25, 25, 300, 3000));
             _monster1 = new Monster("미니언", 2, 5, 0, 15, 15, 100, 1000);
             _monster2 = new Monster("공허충", 3, 9, 0, 10, 10, 200, 2000);
             _monster3 = new Monster("대포미니언", 5, 8, 0, 25, 25, 300, 3000);
@@ -108,32 +114,28 @@ namespace _17GroupTextRpgGame
                  
             }
         }
-
-           
-        static void StartOfTheBattle()
+         
+        static void MonsterSpawn()
         {
-            Console.Clear();
-            ShowHighlightedText("!! Bettle !!");
-            Console.WriteLine();
-
             //1에서 4 사이의 몬스터를 무작위로 생성
             int numberOfMonsters = new Random().Next(1, 5);
-            Monster[] monsters = new Monster[numberOfMonsters];
+            Monster.MonsterCnt = numberOfMonsters;
+            //Monster[] monsters = new Monster[numberOfMonsters];
 
             //생성된 몬스터 배열 저장
             for (int i = 0; i < numberOfMonsters; i++)
             {
                 //몬스터 생성 및 표시
                 Monster monster = GenerateRandomMonster();
-                monsters[i] = monster;
+                _monsters[i] = monster;
             }
             //몬스터 배열 정렬
-            Array.Sort(monsters, (m1, m2) => m1.Level.CompareTo(m2.Level));
+            //Array.Sort(_monsters, (m1, m2) => m1.Level.CompareTo(m2.Level));
 
             //몬스터 상태 표시
             for (int i = 0; i < numberOfMonsters; i++)
             {
-                Console.WriteLine($"Lv.{monsters[i].Level} {monsters[i].Name} HP {monsters[i].Hp}");
+                Console.WriteLine($"{i + 1}. Lv.{_monsters[i].Level} {_monsters[i].Name} HP {_monsters[i].Hp}");
             }
 
             Console.WriteLine("\n[내정보]");
@@ -146,34 +148,79 @@ namespace _17GroupTextRpgGame
                 Console.WriteLine("\n0. 공격\n");
                 Console.Write("원하시는 행동을 입력해주세요.\n>> ");
             }
+        }
 
-            switch (CheckValidInput(0, 0))
+        private static Monster GenerateRandomMonster()
+        {
+            //필요에 따라 몬스터 추가
+            Monster[] possibleMonsters = { _monster1, _monster2, _monster3 };
+
+            //몬스터 배열에서 몬스터 무작위 선택
+            int randomIndex = new Random().Next(possibleMonsters.Length);
+            Monster selectedMonster = possibleMonsters[randomIndex];
+
+            //몬스터 인스턴스 생성
+            return new Monster(selectedMonster.Name, selectedMonster.Level, selectedMonster.Atk,
+                selectedMonster.Def, selectedMonster.Hp, selectedMonster.Maxhp, selectedMonster.Exp,
+                selectedMonster.Gold);
+        }
+
+        static void StartOfTheBattle()
+        {
+            Console.Clear();
+            ShowHighlightedText("!! Bettle !!");
+            Console.WriteLine();
+            MonsterSpawn();
+
+            int keyInput = CheckValidInput(0, Monster.MonsterCnt); // 생성된 몬스터 번호를 입력시 그 몬스터와 배틀
+
+            switch (keyInput)
 
             {
                 case 0:
-                    //공격();
+                    DungeonMenu();
+                    break;
+
+                default:
+                    EnemyPhase(keyInput);
                     break;
             }
 
-            static Monster GenerateRandomMonster()
-            {
-                //필요에 따라 몬스터 추가
-                Monster[] possibleMonsters = { _monster1, _monster2, _monster3 };
 
-                //몬스터 배열에서 몬스터 무작위 선택
-                int randomIndex = new Random().Next(possibleMonsters.Length);
-                Monster selectedMonster = possibleMonsters[randomIndex];
-
-                //몬스터 인스턴스 생성
-                return new Monster(selectedMonster.Name, selectedMonster.Level, selectedMonster.Atk,
-                    selectedMonster.Def, selectedMonster.Hp, selectedMonster.Maxhp, selectedMonster.Exp,
-                    selectedMonster.Gold);
-            }
 
             VictoryBattle(); // 승리조건을 스타트배틀에서 끌어다 쓸거 같아서 넣어뒀어요!
             //랜덤하게 소환된 몬스터 1~3마리와 싸우기.  
         }
 
+        private static void EnemyPhase(int keyInput)
+        {
+            Console.WriteLine(_monsters[keyInput - 1].Name);
+            Console.WriteLine(_monsters[keyInput-1].Hp);
+            Console.WriteLine(_monsters[keyInput-1].Level);
+
+            int randomCorrectAtk = new Random().Next(1, 11);
+            int randomChangeAtk = new Random().Next(1, 3);
+
+            if (randomCorrectAtk >= 1 && randomCorrectAtk < 10)
+            {
+                Console.WriteLine(_player.Atk + getSumBonusAtk() + "의 데미지로 공격");
+            }
+
+            else
+            {
+                double value = (double)(_player.Atk + getSumBonusAtk()) / 10;
+                if (randomChangeAtk == 2)
+                {
+                    Console.WriteLine(_player.Atk + getSumBonusAtk() + Math.Ceiling(value) + "의 데미지로 공격");
+
+                }
+
+                else if (randomChangeAtk == 1)
+                {
+                    Console.WriteLine(_player.Atk + getSumBonusAtk() - Math.Ceiling(value) + "의 데미지로 공격");
+                }
+            }
+        }
         static void VictoryBattle() //승리조건 구현 현재까진 몬스터가 1마리만 있을때만 했어요! 3마리는 좀더 고민해보겠습니다.
         {
             if (_player.Hp <= 0 || _monster1.Hp <= 0)
@@ -212,6 +259,12 @@ namespace _17GroupTextRpgGame
             return false;
         }
 
+        static void AddMonster(Monster monster)
+        {
+            if (Monster.MonsterCnt == 5) return;
+            _monsters[Monster.MonsterCnt] = monster;
+            Monster.MonsterCnt++;
+        }
         static void AddItem(Item item)
         {
             if (Item.ItemCnt == 10) return;
@@ -369,6 +422,10 @@ namespace _17GroupTextRpgGame
             }
         }
 
+        static void ToggleMonsterAtk(int idx)
+        {
+            
+        }
         static void ToggleEquipStatus(int idx)
         {
             _items[idx].IsEquiped = !_items[idx].IsEquiped;
