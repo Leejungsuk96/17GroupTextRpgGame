@@ -152,7 +152,17 @@ namespace _17GroupTextRpgGame
             //몬스터 상태 표시
             for (int i = 0; i < numberOfMonsters; i++)
             {
-                Console.WriteLine($"{i + 1}. Lv.{_monsters[i].Level} {_monsters[i].Name} HP {_monsters[i].Hp}");
+                
+                if (_monsters[i].Hp == 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"{i + 1}. Lv.{_monsters[i].Level} {_monsters[i].Name} HP {_monsters[i].Hp}");
+                    Console.ResetColor();                    
+                }
+                else
+                {
+                    Console.WriteLine($"{i + 1}. Lv.{_monsters[i].Level} {_monsters[i].Name} HP {_monsters[i].Hp}");
+                }
             }
 
             Console.WriteLine("\n[내정보]");
@@ -166,6 +176,8 @@ namespace _17GroupTextRpgGame
                 Console.Write("원하시는 행동을 입력해주세요.\n>> ");
             }
         }
+        
+       
 
         private static Monster GenerateRandomMonster()
         {
@@ -189,7 +201,17 @@ namespace _17GroupTextRpgGame
             Console.WriteLine();
             for (int i = 0; i < Monster.MonsterCnt; i++)
             {
-                Console.WriteLine($"{i + 1}. Lv.{_monsters[i].Level} {_monsters[i].Name} HP {_monsters[i].Hp}");
+
+                if (_monsters[i].Hp == 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine($"{i + 1}. Lv.{_monsters[i].Level} {_monsters[i].Name} HP {_monsters[i].Hp} (Dead)");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.WriteLine($"{i + 1}. Lv.{_monsters[i].Level} {_monsters[i].Name} HP {_monsters[i].Hp}");
+                }
             }
 
             int keyInput = CheckValidInput(0, Monster.MonsterCnt); // 생성된 몬스터 번호를 입력시 그 몬스터와 배틀
