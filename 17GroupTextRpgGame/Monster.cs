@@ -12,7 +12,7 @@ namespace _17GroupTextRpgGame
         public int Level { get; }
         public int Atk { get; }
         public int Def { get; }
-        public int Hp { get; }
+        public int Hp { get; set; }
         public int Maxhp { get; }
         public int Exp { get; }
         public int Gold { get; }
