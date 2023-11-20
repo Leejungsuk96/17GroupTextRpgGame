@@ -23,22 +23,25 @@ namespace _17GroupTextRpgGame
             PrintStartLogo();
             GameDataSetting();
             MonsterSpawn();
-            StartMenu();
-            
+            StartMenu();           
         }
 
         static void GameDataSetting() // 최대체력 추가해줬어요.
         {
             //유저 이름 적용
             Console.Clear();
+            Console.WriteLine();
             Console.WriteLine("스파르타 게임에 오신 것을 환영합니다.");
+            Console.WriteLine();
             Console.WriteLine("플레이어의 닉네임을 적어주세요. ");
             Console.Write(">> ");
             string playerName = Console.ReadLine();
 
             //직업 선택
+            Console.Clear();
             Console.WriteLine();
             Console.WriteLine("1. 전사  |  2. 법사  |  3. 도적");
+            Console.WriteLine();
             Console.WriteLine("원하는 직업을 선택해주세요.");
             Console.Write(">> ");
             string jobChoice = Console.ReadLine();
@@ -75,15 +78,17 @@ namespace _17GroupTextRpgGame
             /// 3. 선택 결과에 따라 메뉴로 보내줌
             Console.Clear();
 
-            Console.WriteLine("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-            Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.");
-            Console.WriteLine("이곳에서 던전으로 들어가기 전 활동을 할 수 있습니다.");
-            Console.WriteLine("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
-            Console.WriteLine("");
+            Console.WriteLine("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+            Console.WriteLine("■                                                        ■");
+            Console.WriteLine("■        스파르타 마을에 오신 여러분 환영합니다!         ■");
+            Console.WriteLine("■  이곳에서 던전으로 들어가기 전 활동을 할 수 있습니다.  ■");
+            Console.WriteLine("■                                                        ■");
+            Console.WriteLine("■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■");
+            Console.WriteLine();
             Console.WriteLine("1. 상태 보기");
             Console.WriteLine("2. 인벤토리");
             Console.WriteLine("3. 던전 입장");
-            Console.WriteLine("");
+            Console.WriteLine();
             // 1안 : 착한 유저들만 있을 경우
             // int keyInput = int.Parse(Console.ReadLine());
 
@@ -115,6 +120,7 @@ namespace _17GroupTextRpgGame
         {
             Console.Clear();
             ShowHighlightedText("■던전에 입장했습니다.■");
+            Console.WriteLine();
             Console.WriteLine("몬스터가 나타났습니다.");
             Console.WriteLine();
             Console.WriteLine("0. 마을로 돌아가기.");
@@ -137,8 +143,7 @@ namespace _17GroupTextRpgGame
         {
             //1에서 4 사이의 몬스터를 무작위로 생성
             int numberOfMonsters = new Random().Next(1, 5);
-            Monster.MonsterCnt = numberOfMonsters;
-            //Monster[] monsters = new Monster[numberOfMonsters];
+            Monster.MonsterCnt = numberOfMonsters;            
 
             //생성된 몬스터 배열 저장
             _monsters = new Monster[numberOfMonsters];
@@ -163,21 +168,8 @@ namespace _17GroupTextRpgGame
                 {
                     Console.WriteLine($"{i + 1}. Lv.{_monsters[i].Level} {_monsters[i].Name} HP {_monsters[i].Hp}");
                 }
-            }
-
-            Console.WriteLine("\n[내정보]");
-            PrintPlayerInfo();
-
-            static void PrintPlayerInfo()
-            {
-                Console.WriteLine($"Lv.{_player.Level} {_player.Name} ({_player.Job})");
-                Console.WriteLine($"HP {_player.Hp}/{_player.Hp}");
-                Console.WriteLine("\n0. 공격\n");
-                Console.Write("원하시는 행동을 입력해주세요.\n>> ");
-            }
+            }           
         }
-        
-       
 
         private static Monster GenerateRandomMonster()
         {
@@ -214,10 +206,19 @@ namespace _17GroupTextRpgGame
                 }
             }
 
+            Console.WriteLine("\n[내정보]");
+            PrintPlayerInfo();
+
+            static void PrintPlayerInfo()
+            {
+                Console.WriteLine($"Lv.{_player.Level} {_player.Name} ({_player.Job})");
+                Console.WriteLine($"HP {_player.Hp}/{_player.Maxhp}");
+                Console.WriteLine();
+            }
+
             int keyInput = CheckValidInput(0, Monster.MonsterCnt); // 생성된 몬스터 번호를 입력시 그 몬스터와 배틀
 
             switch (keyInput)
-
             {
                 case 0:
                     DungeonMenu();
@@ -228,28 +229,28 @@ namespace _17GroupTextRpgGame
                     break;
             }
 
-
-
             VictoryBattle(); // 승리조건을 스타트배틀에서 끌어다 쓸거 같아서 넣어뒀어요!
             //랜덤하게 소환된 몬스터 1~3마리와 싸우기.  
         }
 
         private static void EnemyPhase(int keyInput)
         {
-            
+            Console.Clear();
             Console.Write(_monsters[keyInput - 1].Name);
             Console.WriteLine(_monsters[keyInput-1].Hp);
 
             do
             {
                 Console.ReadKey();
-                Console.WriteLine("");
+                Console.WriteLine();
                 PlayerAtkToMonster(keyInput);
-                Console.WriteLine("");
+                Console.WriteLine();
                 if (_monsters[keyInput -1].Hp <= 0)
                 {
                     Console.WriteLine("몬스터를 처치했습니다.");
-                    Console.WriteLine("0. 나가기");
+                    Console.WriteLine();
+                    Console.WriteLine("0. 이어서 전투하기");
+                    Console.WriteLine();
                     switch (CheckValidInput(0, 0))
 
                     {
@@ -261,13 +262,15 @@ namespace _17GroupTextRpgGame
                 }
                 Console.ReadKey();
                 MonsterAtkToPlayer(keyInput);
-                Console.WriteLine("");
+                Console.WriteLine();
             }
 
             while (_monsters[keyInput - 1].Hp > 0 && _player.Hp > 0);
 
             Console.WriteLine("몬스터를 처치했습니다.");
+            Console.WriteLine();
             Console.WriteLine("0. 나가기");
+            Console.WriteLine();
             switch (CheckValidInput(0, 0))
 
             {
@@ -276,77 +279,78 @@ namespace _17GroupTextRpgGame
                     break;
             }
 
-
-
-            Console.ReadKey();
-            
+            Console.ReadKey();            
 
             static void MonsterAtkToPlayer(int keyInput)
-            {                                
+            {
+
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkRed;
                 _player.Hp -= _monsters[keyInput - 1].Atk;
                 Console.WriteLine(_monsters[keyInput - 1].Atk+"의 데미지로 " + _monsters[keyInput - 1].Name + "의 공격");
-                Console.Write(_player.Name + "의 체력이 " + _player.Hp + "만큼 남았습니다.");
-                
+                Console.ResetColor();
+                Console.Write(_player.Name + "의 체력이 " + _player.Hp + "만큼 남았습니다.");                
             }
             
             static void PlayerAtkToMonster(int keyInput)
             {
-
-
+                Console.Clear();
                 int randomCorrectAtk = new Random().Next(1, 11);
                 int randomChangeAtk = new Random().Next(1, 3);
 
-                                
-            if (randomCorrectAtk >= 1 && randomCorrectAtk < 10)
-            {
-                _monsters[keyInput - 1].Hp -= _player.Atk + getSumBonusAtk();
-                Console.WriteLine(_player.Atk + getSumBonusAtk() + "의 데미지로 " + _player.Name + "의공격");
-                Console.Write(_monsters[keyInput - 1].Name + "의");
-                if (_monsters[keyInput - 1].Hp < 0)
-                {
-                    _monsters[keyInput - 1].Hp = 0;
-                    Console.WriteLine("체력이 " + _monsters[keyInput - 1].Hp + "만큼 남았습니다.");
-                }
-                else
-                {
-                    Console.WriteLine("체력이 " + _monsters[keyInput - 1].Hp + "만큼 남았습니다.");
-                }
-            }
 
-            else
-            {
-                double value = (double)(_player.Atk + getSumBonusAtk()) / 10;
-                if (randomChangeAtk == 2)
+                if (randomCorrectAtk >= 1 && randomCorrectAtk < 10)
                 {
+
                     _monsters[keyInput - 1].Hp -= _player.Atk + getSumBonusAtk();
-                    Console.WriteLine(_player.Atk + getSumBonusAtk() + Math.Ceiling(value) + "의 데미지로 " + _player.Name + "의공격");
-                    Console.Write(_monsters[keyInput - 1].Name);
-                    Console.WriteLine("");
+                    Console.WriteLine(_player.Atk + getSumBonusAtk() + "의 데미지로 " + _player.Name + "의 공격");
+                    Console.Write(_monsters[keyInput - 1].Name + "의");
                     if (_monsters[keyInput - 1].Hp < 0)
                     {
-                        _monsters[keyInput - 1].Hp = 0;
-                        Console.WriteLine(_monsters[keyInput - 1].Hp);
+                        _monsters[keyInput - 1].Hp = 0;                        
+                        Console.WriteLine("체력이 " + _monsters[keyInput - 1].Hp + "만큼 남았습니다.");
                     }
                     else
-                    {
-                        Console.WriteLine(_monsters[keyInput - 1].Hp);
+                    {                        
+                        Console.WriteLine("체력이 " + _monsters[keyInput - 1].Hp + "만큼 남았습니다.");
                     }
                 }
 
-                else if (randomChangeAtk == 1)
+                else
                 {
-                    _monsters[keyInput - 1].Hp -= _player.Atk + getSumBonusAtk();
-                    Console.WriteLine(_player.Atk + getSumBonusAtk() - Math.Ceiling(value) + "의 데미지로 " + _player.Name + "의공격");
-                    Console.Write(_monsters[keyInput - 1].Name);
-                    if (_monsters[keyInput - 1].Hp < 0)
+                    double value = (double)(_player.Atk + getSumBonusAtk()) / 10;
+                    if (randomChangeAtk == 2)
                     {
-                        _monsters[keyInput - 1].Hp = 0;
-                        Console.WriteLine(_monsters[keyInput - 1].Hp);
-                    }                                                                                    
+                        _monsters[keyInput - 1].Hp -= _player.Atk + getSumBonusAtk();
+                        Console.WriteLine(_player.Atk + getSumBonusAtk() + Math.Ceiling(value) + "의 데미지로 " + _player.Name + "의 공격");
+                        Console.Write(_monsters[keyInput - 1].Name);
+                        Console.WriteLine();
+                        if (_monsters[keyInput - 1].Hp < 0)
+                        {
+                            _monsters[keyInput - 1].Hp = 0;
+                            Console.WriteLine(_monsters[keyInput - 1].Hp);
+                        }
+                        else
+                        {
+                            Console.WriteLine(_monsters[keyInput - 1].Hp);
+                        }
+                    }
+
+                    else if (randomChangeAtk == 1)
+                    {
+                        _monsters[keyInput - 1].Hp -= _player.Atk + getSumBonusAtk();
+                        Console.WriteLine(_player.Atk + getSumBonusAtk() - Math.Ceiling(value) + "의 데미지로 " + _player.Name + "의 공격");
+                        Console.Write(_monsters[keyInput - 1].Name);
+                        if (_monsters[keyInput - 1].Hp < 0)
+                        {
+                            _monsters[keyInput - 1].Hp = 0;
+                            Console.WriteLine(_monsters[keyInput - 1].Hp);
+                        }
+                    }
                 }
-            }                
             }
         }
+
         static void VictoryBattle() //승리조건 구현 현재까진 몬스터가 1마리만 있을때만 했어요! 3마리는 좀더 고민해보겠습니다.
         {
             if (_player.Hp <= 0 || _monster1.Hp <= 0)
@@ -370,6 +374,7 @@ namespace _17GroupTextRpgGame
             /// (2) 숫자가 최소값 ~ 최대값의 범위를 넘는 경우
             int keyInput;
             bool result;
+
             do
             {
                 Console.WriteLine("원하시는 행동을 입력해주세요.");
@@ -421,9 +426,9 @@ namespace _17GroupTextRpgGame
             PrintTextWithHighlights("최대체력 : ", (_player.Maxhp + bonusHp).ToString(), bonusHp > 0 ? string.Format(" (+{0})", bonusHp) : "");
 
             PrintTextWithHighlights("Gold : ", _player.Gold.ToString());
-            Console.WriteLine("");
+            Console.WriteLine();
             Console.WriteLine("0. 뒤로가기");
-            Console.WriteLine("");
+            Console.WriteLine();
             switch (CheckValidInput(0, 0))
             {
                 case 0:
@@ -498,7 +503,7 @@ namespace _17GroupTextRpgGame
 
             ShowHighlightedText("■ 인벤토리 ■");
             Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
-            Console.WriteLine("");
+            Console.WriteLine();
             Console.WriteLine("[아이템 목록]");
             for (int i = 0; i < Item.ItemCnt; i++)
             {
@@ -507,7 +512,7 @@ namespace _17GroupTextRpgGame
             Console.WriteLine("");
             Console.WriteLine("0. 나가기");
             Console.WriteLine("1. 장착관리");
-            Console.WriteLine("");
+            Console.WriteLine();
             switch (CheckValidInput(0, 1))
             {
                 case 0:
@@ -524,8 +529,9 @@ namespace _17GroupTextRpgGame
             Console.Clear();
 
             ShowHighlightedText("■ 인벤토리 - 장착 관리 ■");
+            Console.WriteLine();
             Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
-            Console.WriteLine("");
+            Console.WriteLine();
             Console.WriteLine("[아이템 목록]");
             for (int i = 0; i < Item.ItemCnt; i++)
             {
@@ -586,5 +592,4 @@ namespace _17GroupTextRpgGame
             Console.ReadKey();
         }
     }
-
 }
