@@ -214,6 +214,8 @@ namespace _17GroupTextRpgGame
                 Console.WriteLine($"Lv.{_player.Level} {_player.Name} ({_player.Job})");
                 Console.WriteLine($"HP {_player.Hp}/{_player.Maxhp}");
                 Console.WriteLine();
+                Console.WriteLine("0. 나가기");
+                Console.WriteLine();
             }
 
             int keyInput = CheckValidInput(0, Monster.MonsterCnt); // 생성된 몬스터 번호를 입력시 그 몬스터와 배틀
@@ -509,7 +511,7 @@ namespace _17GroupTextRpgGame
             {
                 _items[i].PrintItemStatDescription();
             }
-            Console.WriteLine("");
+            Console.WriteLine();
             Console.WriteLine("0. 나가기");
             Console.WriteLine("1. 장착관리");
             Console.WriteLine();
@@ -537,7 +539,7 @@ namespace _17GroupTextRpgGame
             {
                 _items[i].PrintItemStatDescription(true, i + 1); // 1, 2, 3에 매핑하기 위해 +1
             }
-            Console.WriteLine("");
+            Console.WriteLine();
             Console.WriteLine("0. 나가기");
 
             int keyInput = CheckValidInput(0, Item.ItemCnt);
