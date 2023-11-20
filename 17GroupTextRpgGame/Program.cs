@@ -123,14 +123,13 @@ namespace _17GroupTextRpgGame
             //Monster[] monsters = new Monster[numberOfMonsters];
 
             //생성된 몬스터 배열 저장
+            _monsters = new Monster[numberOfMonsters];
             for (int i = 0; i < numberOfMonsters; i++)
             {
-                //몬스터 생성 및 표시
-                Monster monster = GenerateRandomMonster();
-                _monsters[i] = monster;
+                _monsters[i] = GenerateRandomMonster();
             }
             //몬스터 배열 정렬
-            //Array.Sort(_monsters, (m1, m2) => m1.Level.CompareTo(m2.Level));
+            Array.Sort(_monsters, (m1, m2) => m2.Level.CompareTo(m1.Level));
 
             //몬스터 상태 표시
             for (int i = 0; i < numberOfMonsters; i++)
