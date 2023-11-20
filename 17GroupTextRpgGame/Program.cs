@@ -22,7 +22,9 @@ namespace _17GroupTextRpgGame
             /// 4. 인벤토리 화면을 구현함
             PrintStartLogo();
             GameDataSetting();
+            MonsterSpawn();
             StartMenu();
+            
         }
 
         static void GameDataSetting() // 최대체력 추가해줬어요.
@@ -185,7 +187,10 @@ namespace _17GroupTextRpgGame
             Console.Clear();
             ShowHighlightedText("!! Bettle !!");
             Console.WriteLine();
-            MonsterSpawn();
+            for (int i = 0; i < Monster.MonsterCnt; i++)
+            {
+                Console.WriteLine($"{i + 1}. Lv.{_monsters[i].Level} {_monsters[i].Name} HP {_monsters[i].Hp}");
+            }
 
             int keyInput = CheckValidInput(0, Monster.MonsterCnt); // 생성된 몬스터 번호를 입력시 그 몬스터와 배틀
 
