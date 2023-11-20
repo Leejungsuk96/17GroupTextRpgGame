@@ -108,10 +108,7 @@ namespace _17GroupTextRpgGame
                     break;
                 case 1:
                     StartOfTheBattle();
-                    break;
-
-
-                 
+                    break;                 
             }
         }
          
@@ -194,16 +191,81 @@ namespace _17GroupTextRpgGame
 
         private static void EnemyPhase(int keyInput)
         {
-            Console.WriteLine(_monsters[keyInput - 1].Name);
+            
+            Console.Write(_monsters[keyInput - 1].Name);
             Console.WriteLine(_monsters[keyInput-1].Hp);
-            Console.WriteLine(_monsters[keyInput-1].Level);
 
-            int randomCorrectAtk = new Random().Next(1, 11);
-            int randomChangeAtk = new Random().Next(1, 3);
+            do
+            {
+                Console.ReadKey();
+                Console.WriteLine("");
+                PlayerAtkToMonster(keyInput);
+                Console.WriteLine("");
+                if (_monsters[keyInput -1].Hp <= 0)
+                {
+                    Console.WriteLine("몬스터를 처치했습니다.");
+                    Console.WriteLine("0. 나가기");
+                    switch (CheckValidInput(0, 0))
 
+                    {
+                        case 0:
+                            StartOfTheBattle();
+                            break;                        
+                    }
+
+                }
+                Console.ReadKey();
+                MonsterAtkToPlayer(keyInput);
+                Console.WriteLine("");
+            }
+
+            while (_monsters[keyInput - 1].Hp > 0 && _player.Hp > 0);
+
+            Console.WriteLine("몬스터를 처치했습니다.");
+            Console.WriteLine("0. 나가기");
+            switch (CheckValidInput(0, 0))
+
+            {
+                case 0:
+                    StartOfTheBattle();
+                    break;
+            }
+
+
+
+            Console.ReadKey();
+            
+
+            static void MonsterAtkToPlayer(int keyInput)
+            {                                
+                _player.Hp -= _monsters[keyInput - 1].Atk;
+                Console.WriteLine(_monsters[keyInput - 1].Atk+"의 데미지로 " + _monsters[keyInput - 1].Name + "의 공격");
+                Console.Write(_player.Name + "의 체력이 " + _player.Hp + "만큼 남았습니다.");
+                
+            }
+            
+            static void PlayerAtkToMonster(int keyInput)
+            {
+
+
+                int randomCorrectAtk = new Random().Next(1, 11);
+                int randomChangeAtk = new Random().Next(1, 3);
+
+                                
             if (randomCorrectAtk >= 1 && randomCorrectAtk < 10)
             {
-                Console.WriteLine(_player.Atk + getSumBonusAtk() + "의 데미지로 공격");
+                _monsters[keyInput - 1].Hp -= _player.Atk + getSumBonusAtk();
+                Console.WriteLine(_player.Atk + getSumBonusAtk() + "의 데미지로 " + _player.Name + "의공격");
+                Console.Write(_monsters[keyInput - 1].Name + "의");
+                if (_monsters[keyInput - 1].Hp < 0)
+                {
+                    _monsters[keyInput - 1].Hp = 0;
+                    Console.WriteLine("체력이 " + _monsters[keyInput - 1].Hp + "만큼 남았습니다.");
+                }
+                else
+                {
+                    Console.WriteLine("체력이 " + _monsters[keyInput - 1].Hp + "만큼 남았습니다.");
+                }
             }
 
             else
@@ -211,14 +273,33 @@ namespace _17GroupTextRpgGame
                 double value = (double)(_player.Atk + getSumBonusAtk()) / 10;
                 if (randomChangeAtk == 2)
                 {
-                    Console.WriteLine(_player.Atk + getSumBonusAtk() + Math.Ceiling(value) + "의 데미지로 공격");
-
+                    _monsters[keyInput - 1].Hp -= _player.Atk + getSumBonusAtk();
+                    Console.WriteLine(_player.Atk + getSumBonusAtk() + Math.Ceiling(value) + "의 데미지로 " + _player.Name + "의공격");
+                    Console.Write(_monsters[keyInput - 1].Name);
+                    Console.WriteLine("");
+                    if (_monsters[keyInput - 1].Hp < 0)
+                    {
+                        _monsters[keyInput - 1].Hp = 0;
+                        Console.WriteLine(_monsters[keyInput - 1].Hp);
+                    }
+                    else
+                    {
+                        Console.WriteLine(_monsters[keyInput - 1].Hp);
+                    }
                 }
 
                 else if (randomChangeAtk == 1)
                 {
-                    Console.WriteLine(_player.Atk + getSumBonusAtk() - Math.Ceiling(value) + "의 데미지로 공격");
+                    _monsters[keyInput - 1].Hp -= _player.Atk + getSumBonusAtk();
+                    Console.WriteLine(_player.Atk + getSumBonusAtk() - Math.Ceiling(value) + "의 데미지로 " + _player.Name + "의공격");
+                    Console.Write(_monsters[keyInput - 1].Name);
+                    if (_monsters[keyInput - 1].Hp < 0)
+                    {
+                        _monsters[keyInput - 1].Hp = 0;
+                        Console.WriteLine(_monsters[keyInput - 1].Hp);
+                    }                                                                                    
                 }
+            }                
             }
         }
         static void VictoryBattle() //승리조건 구현 현재까진 몬스터가 1마리만 있을때만 했어요! 3마리는 좀더 고민해보겠습니다.
