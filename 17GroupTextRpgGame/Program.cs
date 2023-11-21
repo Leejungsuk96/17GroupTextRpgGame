@@ -359,12 +359,12 @@ namespace _17GroupTextRpgGame
                     break;                 
             }
         }
-         
+
         static void MonsterSpawn()
         {
             //1에서 4 사이의 몬스터를 무작위로 생성
             int numberOfMonsters = new Random().Next(1, 5);
-            Monster.MonsterCnt = numberOfMonsters;            
+            Monster.MonsterCnt = numberOfMonsters;
 
             //생성된 몬스터 배열 저장
             _monsters = new Monster[numberOfMonsters];
@@ -379,19 +379,21 @@ namespace _17GroupTextRpgGame
             //몬스터 상태 표시
             for (int i = 0; i < numberOfMonsters; i++)
             {
-                
+
                 if (_monsters[i].Hp == 0)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine($"{i + 1}. Lv.{_monsters[i].Level} {_monsters[i].Name} HP {_monsters[i].Hp}");
-                    Console.ResetColor();                    
+                    Console.ResetColor();
                 }
                 else
                 {
                     Console.WriteLine($"{i + 1}. Lv.{_monsters[i].Level} {_monsters[i].Name} HP {_monsters[i].Hp}");
                 }
-            }           
+            }
+        
         }
+        
 
         private static Monster GenerateRandomMonster()
         {
@@ -447,6 +449,10 @@ namespace _17GroupTextRpgGame
             switch (keyInput)
             {
                 case 0:
+                    if (MonsterAllDead())
+                    {
+                        MonsterSpawn();
+                    }
                     DungeonMenu();
                     break;
 
@@ -482,7 +488,7 @@ namespace _17GroupTextRpgGame
                     {
                         case 0:
                             StartOfTheBattle();
-                            break;                        
+                            break;                      
                     }
 
                 }
@@ -575,7 +581,17 @@ namespace _17GroupTextRpgGame
                 }
             }
         }
-
+        static bool MonsterAllDead()
+        {
+            for(int i = 0; i < Monster.MonsterCnt; i++)
+            {
+                if (_monsters[i].Hp > 0)
+                {
+                    return false;
+                }                
+            }
+            return true;
+        }
         static void VictoryBattle() //승리조건 구현 현재까진 몬스터가 1마리만 있을때만 했어요! 3마리는 좀더 고민해보겠습니다.
         {
             if (_player.Hp <= 0 || _monster1.Hp <= 0)
