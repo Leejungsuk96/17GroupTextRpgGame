@@ -136,6 +136,7 @@ namespace _17GroupTextRpgGame
                 case 1:
                     StartOfTheBattle();
                     break;                 
+
             }
         }
          
@@ -143,8 +144,7 @@ namespace _17GroupTextRpgGame
         {
             //1에서 4 사이의 몬스터를 무작위로 생성
             int numberOfMonsters = new Random().Next(1, 5);
-            Monster.MonsterCnt = numberOfMonsters;            
-
+            
             //생성된 몬스터 배열 저장
             _monsters = new Monster[numberOfMonsters];
             for (int i = 0; i < numberOfMonsters; i++)
@@ -191,14 +191,14 @@ namespace _17GroupTextRpgGame
             Console.Clear();
             ShowHighlightedText("!! Bettle !!");
             Console.WriteLine();
-            for (int i = 0; i < Monster.MonsterCnt; i++)
-            {
-
+            for (int i = 0; i < Monster.MonsterRandomCnt; i++)
+            {               
                 if (_monsters[i].Hp == 0)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     Console.WriteLine($"{i + 1}. Lv.{_monsters[i].Level} {_monsters[i].Name} HP {_monsters[i].Hp} (Dead)");
                     Console.ResetColor();
+                    Console.WriteLine($"{i + 1}. Lv.{_monsters[i].Level} {_monsters[i].Name} HP {_monsters[i].Hp}");
                 }
                 else
                 {
@@ -218,7 +218,7 @@ namespace _17GroupTextRpgGame
                 Console.WriteLine();
             }
 
-            int keyInput = CheckValidInput(0, Monster.MonsterCnt); // 생성된 몬스터 번호를 입력시 그 몬스터와 배틀
+            int keyInput = CheckValidInput(0, Monster.MonsterRandomCnt); // 생성된 몬스터 번호를 입력시 그 몬스터와 배틀
 
             switch (keyInput)
             {
@@ -247,6 +247,7 @@ namespace _17GroupTextRpgGame
                 Console.WriteLine();
                 PlayerAtkToMonster(keyInput);
                 Console.WriteLine();
+                
                 if (_monsters[keyInput -1].Hp <= 0)
                 {
                     Console.WriteLine("몬스터를 처치했습니다.");
@@ -265,6 +266,7 @@ namespace _17GroupTextRpgGame
                 Console.ReadKey();
                 MonsterAtkToPlayer(keyInput);
                 Console.WriteLine();
+                
             }
 
             while (_monsters[keyInput - 1].Hp > 0 && _player.Hp > 0);
@@ -291,7 +293,7 @@ namespace _17GroupTextRpgGame
                 _player.Hp -= _monsters[keyInput - 1].Atk;
                 Console.WriteLine(_monsters[keyInput - 1].Atk+"의 데미지로 " + _monsters[keyInput - 1].Name + "의 공격");
                 Console.ResetColor();
-                Console.Write(_player.Name + "의 체력이 " + _player.Hp + "만큼 남았습니다.");                
+                Console.Write(_player.Name + " 의 체력이 " + _player.Hp + "만큼 남았습니다.");                
             }
             
             static void PlayerAtkToMonster(int keyInput)
@@ -301,7 +303,7 @@ namespace _17GroupTextRpgGame
                 int randomChangeAtk = new Random().Next(1, 3);
 
 
-                if (randomCorrectAtk >= 1 && randomCorrectAtk < 10)
+                if ( randomCorrectAtk < 10)
                 {
 
                     _monsters[keyInput - 1].Hp -= _player.Atk + getSumBonusAtk();
@@ -329,6 +331,7 @@ namespace _17GroupTextRpgGame
                         Console.WriteLine();
                         if (_monsters[keyInput - 1].Hp < 0)
                         {
+                            
                             _monsters[keyInput - 1].Hp = 0;
                             Console.WriteLine(_monsters[keyInput - 1].Hp);
                         }
@@ -351,8 +354,8 @@ namespace _17GroupTextRpgGame
                     }
                 }
             }
-        }
-
+        }                                  
+        
         static void VictoryBattle() //승리조건 구현 현재까진 몬스터가 1마리만 있을때만 했어요! 3마리는 좀더 고민해보겠습니다.
         {
             if (_player.Hp <= 0 || _monster1.Hp <= 0)
@@ -394,9 +397,9 @@ namespace _17GroupTextRpgGame
 
         static void AddMonster(Monster monster)
         {
-            if (Monster.MonsterCnt == 5) return;
-            _monsters[Monster.MonsterCnt] = monster;
-            Monster.MonsterCnt++;
+            if (Monster.MonsterRandomCnt == 5) return;
+            _monsters[Monster.MonsterRandomCnt] = monster;
+            Monster.MonsterRandomCnt++;           
         }
         static void AddItem(Item item)
         {
@@ -556,10 +559,7 @@ namespace _17GroupTextRpgGame
             }
         }
 
-        static void ToggleMonsterAtk(int idx)
-        {
-            
-        }
+      
         static void ToggleEquipStatus(int idx)
         {
             _items[idx].IsEquiped = !_items[idx].IsEquiped;
