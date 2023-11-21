@@ -49,9 +49,9 @@ namespace _17GroupTextRpgGame
             Console.WriteLine("원하는 직업을 선택해주세요.");
             Console.Write(">> ");
             string jobChoice = Console.ReadLine();
-            if (jobChoice == "1") _player = new Character($"{playerName}", "전사", 1, 10, 5, 100, 100, 1500);
-            else if (jobChoice == "2") _player = new Character($"{playerName}", "법사", 1, 20, 5, 60, 60, 1500);
-            else if (jobChoice == "3") _player = new Character($"{playerName}", "도적", 1, 15, 5, 80, 80, 1500);
+            if (jobChoice == "1") _player = new Character($"{playerName}", "전사", 1, 10, 5, 200, 200, 1500);
+            else if (jobChoice == "2") _player = new Character($"{playerName}", "법사", 1, 20, 5, 100, 100, 1500);
+            else if (jobChoice == "3") _player = new Character($"{playerName}", "도적", 1, 15, 5, 150, 150, 1500);
             else
             {
                 Console.WriteLine();
@@ -65,12 +65,12 @@ namespace _17GroupTextRpgGame
 
             //몬스터 3마리.
             _monsters = new Monster[5];
-            AddMonster(new Monster("미니언", 2, 5, 0, 15, 15, 100, 1000));
-            AddMonster(new Monster("공허충", 3, 9, 0, 10, 10, 200, 2000));
-            AddMonster(new Monster("대포미니언", 5, 8, 0, 25, 25, 300, 3000));
-            _monster1 = new Monster("미니언", 2, 5, 0, 15, 15, 100, 1000);
-            _monster2 = new Monster("공허충", 3, 9, 0, 10, 10, 200, 2000);
-            _monster3 = new Monster("대포미니언", 5, 8, 0, 25, 25, 300, 3000);
+            AddMonster(new Monster("미니언", 2, 4, 0, 150, 150, 100, 1000));
+            AddMonster(new Monster("공허충", 3, 10, 0, 100, 100, 150, 1500));
+            AddMonster(new Monster("대포미니언", 5, 8, 0, 300, 300, 300, 3000));
+            _monster1 = new Monster("미니언", 2, 4, 0, 150, 150, 100, 1000);
+            _monster2 = new Monster("공허충", 3, 10, 0, 100, 100, 200, 2000);
+            _monster3 = new Monster("대포미니언", 5, 8, 0, 300, 300, 300, 3000);
             
             _bosses = new Boss[5];
             AddBoss(new Boss("전령", 10, 15, 15, 100, 100, 1000, 5000));
@@ -81,13 +81,13 @@ namespace _17GroupTextRpgGame
             _boss3 = new Boss("바론", 30, 35, 35, 300, 300, 3000, 7000);            
 
             _items = new Item[10];
-            AddItem(new Item("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 0, 5, 0));
-            AddItem(new Item("골든 헬름", "희귀한 광석으로 만들어진 투구입니다.", 1, 0, 9, 0));
+            AddItem(new Item("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 0, 0, 50));
+            AddItem(new Item("골든 헬름", "희귀한 광석으로 만들어진 투구입니다.", 1, 0, 0, 100));
 
             //직업에 맞는 무기 지급
-            if (_player.Job == "전사") AddItem(new Item("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", 1, 2, 0, 0));
-            else if (_player.Job == "법사") AddItem(new Item("낡은 스태프", "쉽게 구할 수 있는 낡은 스태프입니다.", 1, 5, 0, 0));
-            else if (_player.Job == "도적") AddItem(new Item("낡은 단검", "쉽게 볼 수 있는 낡은 단검입니다.", 1, 3, 0, 0));
+            if (_player.Job == "전사") AddItem(new Item("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", 1, 10, 0, 0));
+            else if (_player.Job == "법사") AddItem(new Item("낡은 스태프", "쉽게 구할 수 있는 낡은 스태프입니다.", 1, 10, 0, 0));
+            else if (_player.Job == "도적") AddItem(new Item("낡은 단검", "쉽게 볼 수 있는 낡은 단검입니다.", 1, 10, 0, 0));
         }
 
         static void StartMenu()
@@ -438,7 +438,8 @@ namespace _17GroupTextRpgGame
             static void PrintPlayerInfo()
             {
                 Console.WriteLine($"Lv.{_player.Level} {_player.Name} ({_player.Job})");
-                Console.WriteLine($"HP {_player.Hp}/{_player.Maxhp}");
+                // 장비의 추가 HP가 적용이 안되서 getSumBonusHp()함수 추가
+                Console.WriteLine($"HP {(_player.Hp + getSumBonusHp())}/{_player.Maxhp + getSumBonusHp()}");
                 Console.WriteLine();
                 Console.WriteLine("0. 나가기");
                 Console.WriteLine();
@@ -480,6 +481,31 @@ namespace _17GroupTextRpgGame
                 if (_monsters[keyInput -1].Hp <= 0)
                 {
                     Console.WriteLine("몬스터를 처치했습니다.");
+                    //눈에 잘띄게 색 변경 및 경험치 골드 보상 지급
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write($"경험치 {_monsters[keyInput - 1].Exp}");
+                    Console.ResetColor();
+                    Console.Write(", ");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write($"골드 {_monsters[keyInput - 1].Gold}");
+                    Console.ResetColor();
+                    Console.WriteLine(" 획득 !!!");
+                    _player.Exp += _monsters[keyInput - 1].Exp;
+                    _player.Gold += _monsters[keyInput - 1].Gold;
+                    //레벨할 수 있는 경험치량 확인 후 레벨업
+                    if (_player.CheckExp)
+                    {
+                        Console.WriteLine();
+                        _player.Level += 1;
+                        _player.Maxhp += 10;
+                        _player.Atk += 2;
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine("Level.Up !!!");
+                        Console.ResetColor();
+                        Console.WriteLine();
+                        Console.WriteLine($"HP가 10 증가하였습니다.");
+                        Console.WriteLine($"ATK이 2 증가하였습니다.");
+                    }
                     Console.WriteLine();
                     Console.WriteLine("0. 이어서 전투하기");
                     Console.WriteLine();
@@ -497,7 +523,7 @@ namespace _17GroupTextRpgGame
                 Console.WriteLine();
             }
 
-            while (_monsters[keyInput - 1].Hp > 0 && _player.Hp > 0);
+            while (_monsters[keyInput - 1].Hp > 0 && (_player.Hp + getSumBonusHp()) > 0);
 
             Console.WriteLine("몬스터를 처치했습니다.");
             Console.WriteLine();
@@ -521,7 +547,7 @@ namespace _17GroupTextRpgGame
                 _player.Hp -= _monsters[keyInput - 1].Atk;
                 Console.WriteLine(_monsters[keyInput - 1].Atk+"의 데미지로 " + _monsters[keyInput - 1].Name + "의 공격");
                 Console.ResetColor();
-                Console.Write(_player.Name + "의 체력이 " + _player.Hp + "만큼 남았습니다.");                
+                Console.Write(_player.Name + "의 체력이 " + (_player.Hp + getSumBonusHp()) + "만큼 남았습니다.");                
             }
             
             static void PlayerAtkToMonster(int keyInput)
