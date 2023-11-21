@@ -71,14 +71,14 @@ namespace _17GroupTextRpgGame
             _monster1 = new Monster("미니언", 2, 5, 0, 15, 15, 100, 1000);
             _monster2 = new Monster("공허충", 3, 9, 0, 10, 10, 200, 2000);
             _monster3 = new Monster("대포미니언", 5, 8, 0, 25, 25, 300, 3000);
-
+            
             _bosses = new Boss[5];
             AddBoss(new Boss("전령", 10, 15, 15, 100, 100, 1000, 5000));
             AddBoss(new Boss("드래곤", 20, 25, 25, 200, 200, 2000, 6000));
             AddBoss(new Boss("바론", 30, 35, 35, 300, 300, 3000, 7000));
             _boss1 = new Boss("전령", 10, 15, 15, 100, 100, 1000, 5000);
             _boss2 = new Boss("드래곤", 20, 25, 25, 200, 200, 2000, 6000);
-            _boss3 = new Boss("바론", 30, 35, 35, 300, 300, 3000, 7000);
+            _boss3 = new Boss("바론", 30, 35, 35, 300, 300, 3000, 7000);            
 
             _items = new Item[10];
             AddItem(new Item("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 0, 5, 0));
@@ -163,12 +163,12 @@ namespace _17GroupTextRpgGame
             {
                 BossBattle(difficulty);
             }
-        }
+        }        
 
-        static void BossBattle(int bossIndex)
+        static void BossBattle(int difficulty)
         {
             Boss bossToBattle;
-            switch (bossIndex)
+            switch (difficulty)
             {
                 case 1:
                     bossToBattle = _boss1; // Easy
@@ -176,19 +176,25 @@ namespace _17GroupTextRpgGame
                 case 2:
                     bossToBattle = _boss2; // Normal
                     break;
-                case 3:
+                default:
                     bossToBattle = _boss3; // Hard
-                    break;
+                    break;                                  
             }
 
             Console.Clear();
             ShowHighlightedText("!! Boss Bettle !!");
             Console.WriteLine();
 
-            Boss selectedBoss = _bosses[bossIndex - 1];
-
-            Console.WriteLine($"{bossIndex}. Lv.{selectedBoss.Level} {selectedBoss.Name} HP {selectedBoss.Hp}");
-            Console.ResetColor();
+            if (bossToBattle.Hp == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine($"1. Lv.{bossToBattle.Level} {bossToBattle.Name} HP {bossToBattle.Hp} (Dead)");
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.WriteLine($"1. Lv.{bossToBattle.Level} {bossToBattle.Name} HP {bossToBattle.Hp}");
+            }
 
             Console.WriteLine("\n[내정보]");
             PrintPlayerInfo();
@@ -214,9 +220,6 @@ namespace _17GroupTextRpgGame
                     break;
             }
         }
-
-        // 보스 선택 시 단계별로 등장 구현해야함(지금은 정령만 등장..)
-        // 보스 벨런스 잡기
         static void EnemyPhase2(int keyInput)
         {
             Console.Clear();
@@ -224,7 +227,7 @@ namespace _17GroupTextRpgGame
             Console.WriteLine(_bosses[keyInput - 1].Hp);
 
             do
-            {
+            { 
                 Console.ReadKey();
                 Console.WriteLine();
                 PlayerAtkToBoss(keyInput);
@@ -331,6 +334,7 @@ namespace _17GroupTextRpgGame
                 }
             }
         }
+        
 
         //던전 메뉴
         static void DungeonMenu()
@@ -344,7 +348,7 @@ namespace _17GroupTextRpgGame
             Console.WriteLine("1. 싸우기");
             Console.WriteLine();
 
-            switch (CheckValidInput(0, 1))
+            switch (CheckValidInput(0, 1)) 
 
             {
                 case 0:
@@ -352,7 +356,7 @@ namespace _17GroupTextRpgGame
                     break;
                 case 1:
                     StartOfTheBattle();
-                    break;
+                    break;                 
             }
         }
 
@@ -367,8 +371,8 @@ namespace _17GroupTextRpgGame
             for (int i = 0; i < numberOfMonsters; i++)
             {
                 _monsters[i] = GenerateRandomMonster();
-            }
-
+            }         
+            
             //몬스터 배열 정렬
             Array.Sort(_monsters, (m1, m2) => m2.Level.CompareTo(m1.Level));
 
@@ -387,8 +391,9 @@ namespace _17GroupTextRpgGame
                     Console.WriteLine($"{i + 1}. Lv.{_monsters[i].Level} {_monsters[i].Name} HP {_monsters[i].Hp}");
                 }
             }
-
+        
         }
+        
 
         private static Monster GenerateRandomMonster()
         {
@@ -413,6 +418,7 @@ namespace _17GroupTextRpgGame
 
             for (int i = 0; i < Monster.MonsterCnt; i++)
             {
+
                 if (_monsters[i].Hp == 0)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGray;
@@ -424,6 +430,7 @@ namespace _17GroupTextRpgGame
                     Console.WriteLine($"{i + 1}. Lv.{_monsters[i].Level} {_monsters[i].Name} HP {_monsters[i].Hp}");
                 }
             }
+
 
             Console.WriteLine("\n[내정보]");
             PrintPlayerInfo();
@@ -462,7 +469,7 @@ namespace _17GroupTextRpgGame
         {
             Console.Clear();
             Console.Write(_monsters[keyInput - 1].Name);
-            Console.WriteLine(_monsters[keyInput - 1].Hp);
+            Console.WriteLine(_monsters[keyInput-1].Hp);
 
             do
             {
@@ -470,7 +477,7 @@ namespace _17GroupTextRpgGame
                 Console.WriteLine();
                 PlayerAtkToMonster(keyInput);
                 Console.WriteLine();
-                if (_monsters[keyInput - 1].Hp <= 0)
+                if (_monsters[keyInput -1].Hp <= 0)
                 {
                     Console.WriteLine("몬스터를 처치했습니다.");
                     Console.WriteLine();
@@ -481,7 +488,7 @@ namespace _17GroupTextRpgGame
                     {
                         case 0:
                             StartOfTheBattle();
-                            break;
+                            break;                      
                     }
 
                 }
@@ -504,7 +511,7 @@ namespace _17GroupTextRpgGame
                     break;
             }
 
-            Console.ReadKey();
+            Console.ReadKey();            
 
             static void MonsterAtkToPlayer(int keyInput)
             {
@@ -512,11 +519,11 @@ namespace _17GroupTextRpgGame
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 _player.Hp -= _monsters[keyInput - 1].Atk;
-                Console.WriteLine(_monsters[keyInput - 1].Atk + "의 데미지로 " + _monsters[keyInput - 1].Name + "의 공격");
+                Console.WriteLine(_monsters[keyInput - 1].Atk+"의 데미지로 " + _monsters[keyInput - 1].Name + "의 공격");
                 Console.ResetColor();
-                Console.Write(_player.Name + "의 체력이 " + _player.Hp + "만큼 남았습니다.");
+                Console.Write(_player.Name + "의 체력이 " + _player.Hp + "만큼 남았습니다.");                
             }
-
+            
             static void PlayerAtkToMonster(int keyInput)
             {
                 Console.Clear();
@@ -529,14 +536,13 @@ namespace _17GroupTextRpgGame
                     _monsters[keyInput - 1].Hp -= _player.Atk + getSumBonusAtk();
                     Console.WriteLine(_player.Atk + getSumBonusAtk() + "의 데미지로 " + _player.Name + "의 공격");
                     Console.Write(_monsters[keyInput - 1].Name + "의");
-
                     if (_monsters[keyInput - 1].Hp < 0)
                     {
-                        _monsters[keyInput - 1].Hp = 0;
+                        _monsters[keyInput - 1].Hp = 0;                        
                         Console.WriteLine("체력이 " + _monsters[keyInput - 1].Hp + "만큼 남았습니다.");
                     }
                     else
-                    {
+                    {                        
                         Console.WriteLine("체력이 " + _monsters[keyInput - 1].Hp + "만큼 남았습니다.");
                     }
                 }
@@ -577,12 +583,12 @@ namespace _17GroupTextRpgGame
         }
         static bool MonsterAllDead()
         {
-            for (int i = 0; i < Monster.MonsterCnt; i++)
+            for(int i = 0; i < Monster.MonsterCnt; i++)
             {
                 if (_monsters[i].Hp > 0)
                 {
                     return false;
-                }
+                }                
             }
             return true;
         }
@@ -632,8 +638,8 @@ namespace _17GroupTextRpgGame
             Monster.MonsterCnt++;
         }
 
-        static void AddBoss(Boss boss)
-        {
+        static void AddBoss(Boss boss) 
+        { 
             if (Boss.BossCnt == 5) return;
             _bosses[Boss.BossCnt] = boss;
             Boss.BossCnt++;
@@ -799,7 +805,7 @@ namespace _17GroupTextRpgGame
 
         static void ToggleMonsterAtk(int idx)
         {
-
+            
         }
         static void ToggleEquipStatus(int idx)
         {
