@@ -13,7 +13,8 @@ namespace _17GroupTextRpgGame
         static Monster _monster3;
         static Boss[] _bosses;
         static Boss _boss1;
-        
+        static Boss _boss2;
+        static Boss _boss3;
 
         static void Main(string[] args)
         {
@@ -71,9 +72,13 @@ namespace _17GroupTextRpgGame
             _monster2 = new Monster("공허충", 3, 9, 0, 10, 10, 200, 2000);
             _monster3 = new Monster("대포미니언", 5, 8, 0, 25, 25, 300, 3000);
 
-            _bosses = new Boss[5];            
-            AddBoss(new Boss("바론", 30, 35, 35, 300, 300, 3000, 7000));            
-            _boss1 = new Boss("바론", 30, 35, 35, 300, 300, 3000, 7000);
+            _bosses = new Boss[5];
+            AddBoss(new Boss("전령", 10, 15, 15, 100, 100, 1000, 5000));
+            AddBoss(new Boss("드래곤", 20, 25, 25, 200, 200, 2000, 6000));
+            AddBoss(new Boss("바론", 30, 35, 35, 300, 300, 3000, 7000));
+            _boss1 = new Boss("전령", 10, 15, 15, 100, 100, 1000, 5000);
+            _boss2 = new Boss("드래곤", 20, 25, 25, 200, 200, 2000, 6000);
+            _boss3 = new Boss("바론", 30, 35, 35, 300, 300, 3000, 7000);
 
             _items = new Item[10];
             AddItem(new Item("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 0, 5, 0));
@@ -140,47 +145,63 @@ namespace _17GroupTextRpgGame
 
             ShowHighlightedText("■보스방에 입장했습니다.■");
             Console.WriteLine();
-            Console.WriteLine("보스가 나타났습니다.");
-            Console.WriteLine();
-            Console.WriteLine("1. 싸우러 가기");            
+            Console.WriteLine("난이도를 선택해주세요");
+            Console.WriteLine("1. Easy");
+            Console.WriteLine("2. Normal");
+            Console.WriteLine("3. Hard");
             Console.WriteLine();
             Console.WriteLine("0. 마을로 돌아가기.");
             Console.WriteLine();
 
-            switch (CheckValidInput(0, 1))
-            {
-                case 0:
-                    StartMenu();
-                    break;
-                case 1:
-                    BossBattle();
-                    break;
-            } 
-            
-            static void BossBattle()
-            {
-                Console.Clear();
-                ShowHighlightedText("!! Boss Bettle !!");
-                Console.WriteLine();
-                Console.WriteLine("[보스 정보]");
-                Console.WriteLine($"Lv.{_boss1.Level} {_boss1.Name}");
-                Console.WriteLine($"HP {_boss1.Hp}/{_boss1.Maxhp}");
-                Console.WriteLine();
+            int difficulty = CheckValidInput(0, 3);
 
-                Console.WriteLine("\n[내정보]");
-                PrintPlayerInfo();
-
-                static void PrintPlayerInfo()
-                {
-                    Console.WriteLine($"Lv.{_player.Level} {_player.Name} ({_player.Job})");
-                    Console.WriteLine($"HP {_player.Hp}/{_player.Maxhp}");
-                    Console.WriteLine();
-                    Console.WriteLine("1. 싸우기");
-                    Console.WriteLine();
-                    Console.WriteLine("0. 나가기");
-                    Console.WriteLine();
-                }
+            if (difficulty == 0)
+            {
+                StartMenu();
             }
+            else
+            {
+                BossBattle(difficulty);
+            }
+        }
+
+        static void BossBattle(int bossIndex)
+        {
+            Boss bossToBattle;
+            switch (bossIndex)
+            {
+                case 1:
+                    bossToBattle = _boss1; // Easy
+                    break;
+                case 2:
+                    bossToBattle = _boss2; // Normal
+                    break;
+                case 3:
+                    bossToBattle = _boss3; // Hard
+                    break;
+            }
+
+            Console.Clear();
+            ShowHighlightedText("!! Boss Bettle !!");
+            Console.WriteLine();
+
+            Boss selectedBoss = _bosses[bossIndex - 1];
+
+            Console.WriteLine($"{bossIndex}. Lv.{selectedBoss.Level} {selectedBoss.Name} HP {selectedBoss.Hp}");
+            Console.ResetColor();
+
+            Console.WriteLine("\n[내정보]");
+            PrintPlayerInfo();
+
+            static void PrintPlayerInfo()
+            {
+                Console.WriteLine($"Lv.{_player.Level} {_player.Name} ({_player.Job})");
+                Console.WriteLine($"HP {_player.Hp}/{_player.Maxhp}");
+                Console.WriteLine();
+                Console.WriteLine("0. 나가기");
+                Console.WriteLine();
+            }
+
             int keyInput = CheckValidInput(0, 1);
 
             switch (keyInput)
@@ -192,8 +213,10 @@ namespace _17GroupTextRpgGame
                     EnemyPhase2(keyInput);
                     break;
             }
-        }        
+        }
 
+        // 보스 선택 시 단계별로 등장 구현해야함(지금은 정령만 등장..)
+        // 보스 벨런스 잡기
         static void EnemyPhase2(int keyInput)
         {
             Console.Clear();
