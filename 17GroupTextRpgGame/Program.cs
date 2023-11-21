@@ -49,9 +49,9 @@ namespace _17GroupTextRpgGame
             Console.WriteLine("원하는 직업을 선택해주세요.");
             Console.Write(">> ");
             string jobChoice = Console.ReadLine();
-            if (jobChoice == "1") _player = new Character($"{playerName}", "전사", 1, 10, 5, 200, 200, 1500);
-            else if (jobChoice == "2") _player = new Character($"{playerName}", "법사", 1, 20, 5, 100, 100, 1500);
-            else if (jobChoice == "3") _player = new Character($"{playerName}", "도적", 1, 15, 5, 150, 150, 1500);
+            if (jobChoice == "1") _player = new Character($"{playerName}", "전사", 1, 10, 5, 200, 200, 100, 100, 1500);
+            else if (jobChoice == "2") _player = new Character($"{playerName}", "법사", 1, 20, 5, 100, 100, 200, 200, 1500);
+            else if (jobChoice == "3") _player = new Character($"{playerName}", "도적", 1, 15, 5, 150, 150, 150, 150, 1500);
             else
             {
                 Console.WriteLine();
@@ -163,7 +163,42 @@ namespace _17GroupTextRpgGame
             {
                 BossBattle(difficulty);
             }
-        }        
+        }
+
+
+
+        // 플레이어가 스킬을 선택하고 사용할 수 있도록 메서드를 추가합니다.
+        static Skill ChooseSkill()
+        {
+            ShowSkills();
+
+            Console.WriteLine("0. 뒤로 가기");
+            Console.WriteLine();
+
+            int skillInput = CheckValidInput(0, _player.Skills.Count);
+
+            if (skillInput == 0)
+            {
+                return null; // 플레이어가 뒤로 가기를 선택한 경우
+            }
+
+            // 선택한 스킬을 반환합니다.
+            return _player.Skills[skillInput - 1];
+        }
+
+        //스킬 목록 보여주기.
+        static void ShowSkills()
+        {
+            Console.WriteLine("\n[스킬 목록]");
+            for (int i = 0; i < _player.Skills.Count; i++)
+            {
+                Skill skill = _player.Skills[i];
+                Console.WriteLine($"{i + 1}, {skill.Name} (데미지: {skill.Damage}, 소비 MP : {skill.MpCost})");
+            }
+            Console.WriteLine();
+        }
+
+
 
         static void BossBattle(int difficulty)
         {
@@ -194,6 +229,7 @@ namespace _17GroupTextRpgGame
             else
             {
                 Console.WriteLine($"1. Lv.{bossToBattle.Level} {bossToBattle.Name} HP {bossToBattle.Hp}");
+
             }
 
             Console.WriteLine("\n[내정보]");
@@ -220,6 +256,38 @@ namespace _17GroupTextRpgGame
                     break;
             }
         }
+
+
+
+        // 플레이어가 보스에게 스킬을 사용하는 메서드
+                static void PlayerUseSkill(Skill skill, Boss boss)
+                {
+                    Console.Clear();
+                    Console.WriteLine($"플레이어가 {boss.Name}에게 {skill.Name}을 사용합니다.");
+
+                    if (_player.Mp >= skill.MpCost)
+                    {
+                        // 플레이어의 MP가 충분한 경우에만 스킬 사용
+                        boss.Hp -= skill.Damage;
+                        _player.Mp -= skill.MpCost;
+
+                        Console.WriteLine($"플레이어가 {skill.Name}을 사용하여 {skill.Damage}의 데미지를 입힙니다.");
+                        Console.WriteLine($"{boss.Name}의 남은 체력: {boss.Hp}");
+                        Console.WriteLine($"플레이어의 남은 MP: {_player.Mp}");
+                        Console.WriteLine("");
+                        Console.WriteLine("0. 뒤로 가기");
+                    }
+                    else
+                    {
+                        Console.WriteLine("MP가 부족하여 스킬을 사용할 수 없습니다.");
+                        Console.WriteLine("");
+                        Console.WriteLine("0. 뒤로 가기");
+                    }
+
+                       
+                }
+
+
         static void EnemyPhase2(int keyInput)
         {
             Console.Clear();
@@ -227,12 +295,65 @@ namespace _17GroupTextRpgGame
             Console.WriteLine(_bosses[keyInput - 1].Hp);
 
             do
-            { 
+            {
+
+                // 플레이어가 보스에게 스킬을 사용
+                Skill selectedSkill = ChooseSkill();
+
+                if (selectedSkill == null)
+                {
+                    // 플레이어가 뒤로 가기를 선택한 경우
+                    BossDungeonMenu();
+                    return;
+                }
+
+                // 선택한 스킬을 사용합니다.
+                PlayerUseSkill(selectedSkill, _bosses[keyInput - 1]);
+                Console.WriteLine();
+
+               
+
+                // 플레이어가 보스에게 스킬을 사용하는 메서드
+                static void PlayerUseSkill(Skill skill, Boss boss)
+                {
+                    Console.Clear();
+                    Console.WriteLine($"플레이어가 {boss.Name}에게 {skill.Name}을 사용합니다.");
+
+                    if (_player.Mp >= skill.MpCost)
+                    {
+                        // 플레이어의 MP가 충분한 경우에만 스킬 사용
+                        boss.Hp -= skill.Damage;
+                        _player.Mp -= skill.MpCost;
+
+                        Console.WriteLine($"플레이어가 {skill.Name}을 사용하여 {skill.Damage}의 데미지를 입힙니다.");
+                        Console.WriteLine($"{boss.Name}의 남은 체력: {boss.Hp}");
+                        Console.WriteLine($"플레이어의 남은 MP: {_player.Mp}");
+                        Console.WriteLine("");
+                        Console.WriteLine("0. 뒤로 가기");
+                    }
+                    else
+                    {
+                        Console.WriteLine("MP가 부족하여 스킬을 사용할 수 없습니다.");
+                        Console.WriteLine("");
+                        Console.WriteLine("0. 뒤로 가기");
+                    }
+
+                    int input = CheckValidInput(0, 0);
+
+                    if (input == 0)
+                    {
+                        // 사용자가 0을 선택하면 뒤로 가기
+                       
+                    }
+                }
+
+
                 Console.ReadKey();
                 Console.WriteLine();
                 PlayerAtkToBoss(keyInput);
                 Console.WriteLine();
 
+                //보스 처치.
                 if (_bosses[keyInput - 1].Hp <= 0)
                 {
                     Console.WriteLine("보스를 처치했습니다.");
@@ -246,6 +367,10 @@ namespace _17GroupTextRpgGame
                             break;
                     }
                 }
+
+
+
+
                 Console.ReadKey();
                 BossAtkToPlayer(keyInput);
                 Console.WriteLine();
@@ -699,6 +824,9 @@ namespace _17GroupTextRpgGame
             PrintTextWithHighlights("체 력 : ", (_player.Hp + bonusHp).ToString(), bonusHp > 0 ? string.Format(" (+{0})", bonusHp) : "");
 
             PrintTextWithHighlights("최대체력 : ", (_player.Maxhp + bonusHp).ToString(), bonusHp > 0 ? string.Format(" (+{0})", bonusHp) : "");
+            
+            PrintTextWithHighlights("마 력 : ", _player.Mp.ToString()); //캐릭터 정보에 mp 추가.
+            PrintTextWithHighlights("최대마력 : ", _player.Maxmp.ToString());
 
             PrintTextWithHighlights("Gold : ", _player.Gold.ToString());
             Console.WriteLine();
