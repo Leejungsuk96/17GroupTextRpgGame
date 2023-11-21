@@ -48,7 +48,16 @@ namespace _17GroupTextRpgGame
             if (jobChoice == "1") _player = new Character($"{playerName}", "전사", 1, 10, 5, 100, 100, 1500);
             else if (jobChoice == "2") _player = new Character($"{playerName}", "법사", 1, 20, 5, 60, 60, 1500);
             else if (jobChoice == "3") _player = new Character($"{playerName}", "도적", 1, 15, 5, 80, 80, 1500);
-            else Console.WriteLine("잘못된 입력입니다.");
+            else
+            {
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("잘못된 입력입니다.");
+                Console.WriteLine("플레이어의 정보를 초기화 합니다.");
+                Console.ResetColor();
+                Console.ReadLine();
+                GameDataSetting();
+            }
 
             //몬스터 3마리.
             _monsters = new Monster[5];
