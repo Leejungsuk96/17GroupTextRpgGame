@@ -227,8 +227,8 @@ namespace _17GroupTextRpgGame
             Console.WriteLine(_bosses[keyInput - 1].Hp);
 
             do
-            {
-                //Console.ReadKey();
+            { 
+                Console.ReadKey();
                 Console.WriteLine();
                 PlayerAtkToBoss(keyInput);
                 Console.WriteLine();
