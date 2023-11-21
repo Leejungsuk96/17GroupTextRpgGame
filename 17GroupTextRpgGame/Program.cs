@@ -11,6 +11,10 @@ namespace _17GroupTextRpgGame
         static Monster _monster1;
         static Monster _monster2;
         static Monster _monster3;
+        static Boss[] _bosses;
+        static Boss _boss1;
+        static Boss _boss2;
+        static Boss _boss3;
 
         static void Main(string[] args)
         {
@@ -23,7 +27,7 @@ namespace _17GroupTextRpgGame
             PrintStartLogo();
             GameDataSetting();
             MonsterSpawn();
-            StartMenu();           
+            StartMenu();
         }
 
         static void GameDataSetting() // 최대체력 추가해줬어요.
@@ -67,6 +71,14 @@ namespace _17GroupTextRpgGame
             _monster1 = new Monster("미니언", 2, 5, 0, 15, 15, 100, 1000);
             _monster2 = new Monster("공허충", 3, 9, 0, 10, 10, 200, 2000);
             _monster3 = new Monster("대포미니언", 5, 8, 0, 25, 25, 300, 3000);
+            
+            _bosses = new Boss[5];
+            AddBoss(new Boss("전령", 10, 15, 15, 100, 100, 1000, 5000));
+            AddBoss(new Boss("드래곤", 20, 25, 25, 200, 200, 2000, 6000));
+            AddBoss(new Boss("바론", 30, 35, 35, 300, 300, 3000, 7000));
+            _boss1 = new Boss("전령", 10, 15, 15, 100, 100, 1000, 5000);
+            _boss2 = new Boss("드래곤", 20, 25, 25, 200, 200, 2000, 6000);
+            _boss3 = new Boss("바론", 30, 35, 35, 300, 300, 3000, 7000);            
 
             _items = new Item[10];
             AddItem(new Item("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 0, 5, 0));
@@ -97,6 +109,7 @@ namespace _17GroupTextRpgGame
             Console.WriteLine("1. 상태 보기");
             Console.WriteLine("2. 인벤토리");
             Console.WriteLine("3. 던전 입장");
+            Console.WriteLine("4. 보스방 입장");
             Console.WriteLine();
             // 1안 : 착한 유저들만 있을 경우
             // int keyInput = int.Parse(Console.ReadLine());
@@ -110,7 +123,7 @@ namespace _17GroupTextRpgGame
             //     result = int.TryParse(Console.ReadLine(), out keyInput);
             // } while (result == false || CheckIfValid(keyInput, min : 1, max : 2) == false);
 
-            switch (CheckValidInput(1, 3))
+            switch (CheckValidInput(1, 4))
             {
                 case 1:
                     StatusMenu();
@@ -121,8 +134,207 @@ namespace _17GroupTextRpgGame
                 case 3:
                     DungeonMenu();
                     break;
+                case 4:
+                    BossDungeonMenu();
+                    break;
             }
         }
+        static void BossDungeonMenu()
+        {
+            Console.Clear();
+
+            ShowHighlightedText("■보스방에 입장했습니다.■");
+            Console.WriteLine();
+            Console.WriteLine("난이도를 선택해주세요");
+            Console.WriteLine("1. Easy");
+            Console.WriteLine("2. Normal");
+            Console.WriteLine("3. Hard");
+            Console.WriteLine();
+            Console.WriteLine("0. 마을로 돌아가기.");
+            Console.WriteLine();
+
+            int difficulty = CheckValidInput(0, 3);
+
+            if (difficulty == 0)
+            {
+                StartMenu();
+            }
+            else
+            {
+                BossBattle(difficulty);
+            }
+        }        
+
+        static void BossBattle(int difficulty)
+        {
+            Boss bossToBattle;
+            switch (difficulty)
+            {
+                case 1:
+                    bossToBattle = _boss1; // Easy
+                    break;
+                case 2:
+                    bossToBattle = _boss2; // Normal
+                    break;
+                default:
+                    bossToBattle = _boss3; // Hard
+                    break;                                  
+            }
+
+            Console.Clear();
+            ShowHighlightedText("!! Boss Bettle !!");
+            Console.WriteLine();
+
+            if (bossToBattle.Hp == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine($"1. Lv.{bossToBattle.Level} {bossToBattle.Name} HP {bossToBattle.Hp} (Dead)");
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.WriteLine($"1. Lv.{bossToBattle.Level} {bossToBattle.Name} HP {bossToBattle.Hp}");
+            }
+
+            Console.WriteLine("\n[내정보]");
+            PrintPlayerInfo();
+
+            static void PrintPlayerInfo()
+            {
+                Console.WriteLine($"Lv.{_player.Level} {_player.Name} ({_player.Job})");
+                Console.WriteLine($"HP {_player.Hp}/{_player.Maxhp}");
+                Console.WriteLine();
+                Console.WriteLine("0. 나가기");
+                Console.WriteLine();
+            }
+
+            int keyInput = CheckValidInput(0, 1);
+
+            switch (keyInput)
+            {
+                case 0:
+                    BossDungeonMenu();
+                    break;
+                case 1:
+                    EnemyPhase2(keyInput);
+                    break;
+            }
+        }
+        static void EnemyPhase2(int keyInput)
+        {
+            Console.Clear();
+            Console.Write(_bosses[keyInput - 1].Name);
+            Console.WriteLine(_bosses[keyInput - 1].Hp);
+
+            do
+            {
+                //Console.ReadKey();
+                Console.WriteLine();
+                PlayerAtkToBoss(keyInput);
+                Console.WriteLine();
+
+                if (_bosses[keyInput - 1].Hp <= 0)
+                {
+                    Console.WriteLine("보스를 처치했습니다.");
+                    Console.WriteLine();
+                    Console.WriteLine("0. 나가기");
+                    Console.WriteLine();
+                    switch (CheckValidInput(0, 0))
+                    {
+                        case 0:
+                            BossDungeonMenu();
+                            break;
+                    }
+                }
+                Console.ReadKey();
+                BossAtkToPlayer(keyInput);
+                Console.WriteLine();
+            }
+
+            while (_bosses[keyInput - 1].Hp > 0 && _player.Hp > 0);
+
+            Console.WriteLine("보스를 처치했습니다.");
+            Console.WriteLine();
+            Console.WriteLine("0. 나가기");
+            Console.WriteLine();
+            switch (CheckValidInput(0, 0))
+
+            {
+                case 0:
+                    BossDungeonMenu();
+                    break;
+            }
+            Console.ReadKey();
+
+            static void BossAtkToPlayer(int keyInput)
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                _player.Hp -= _bosses[keyInput - 1].Atk;
+                Console.WriteLine(_bosses[keyInput - 1].Atk + "의 데미지로 " + _bosses[keyInput - 1].Name + "의 공격");
+                Console.ResetColor();
+                Console.Write(_player.Name + "의 체력이 " + _player.Hp + "만큼 남았습니다.");
+            }
+
+            static void PlayerAtkToBoss(int keyInput)
+            {
+                Console.Clear();
+                int randomCorrectAtk = new Random().Next(1, 11);
+                int randomChangeAtk = new Random().Next(1, 3);
+
+                if (randomCorrectAtk >= 1 && randomCorrectAtk < 10)
+                {
+                    _bosses[keyInput - 1].Hp -= _player.Atk + getSumBonusAtk();
+                    Console.WriteLine(_player.Atk + getSumBonusAtk() + "의 데미지로 " + _player.Name + "의 공격");
+                    Console.Write(_bosses[keyInput - 1].Name + "의");
+
+                    if (_bosses[keyInput - 1].Hp < 0)
+                    {
+                        _bosses[keyInput - 1].Hp = 0;
+                        Console.WriteLine("체력이 " + _bosses[keyInput - 1].Hp + "만큼 남았습니다.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("체력이 " + _bosses[keyInput - 1].Hp + "만큼 남았습니다.");
+                    }
+                }
+
+                else
+                {
+                    double value = (double)(_player.Atk + getSumBonusAtk()) / 10;
+                    if (randomChangeAtk == 2)
+                    {
+                        _bosses[keyInput - 1].Hp -= _player.Atk + getSumBonusAtk();
+                        Console.WriteLine(_player.Atk + getSumBonusAtk() + Math.Ceiling(value) + "의 데미지로 " + _player.Name + "의 공격");
+                        Console.Write(_bosses[keyInput - 1].Name);
+                        Console.WriteLine();
+                        if (_bosses[keyInput - 1].Hp < 0)
+                        {
+                            _bosses[keyInput - 1].Hp = 0;
+                            Console.WriteLine(_bosses[keyInput - 1].Hp);
+                        }
+                        else
+                        {
+                            Console.WriteLine(_bosses[keyInput - 1].Hp);
+                        }
+                    }
+
+                    else if (randomChangeAtk == 1)
+                    {
+                        _bosses[keyInput - 1].Hp -= _player.Atk + getSumBonusAtk();
+                        Console.WriteLine(_player.Atk + getSumBonusAtk() - Math.Ceiling(value) + "의 데미지로 " + _player.Name + "의 공격");
+                        Console.Write(_bosses[keyInput - 1].Name);
+
+                        if (_bosses[keyInput - 1].Hp < 0)
+                        {
+                            _bosses[keyInput - 1].Hp = 0;
+                            Console.WriteLine(_bosses[keyInput - 1].Hp);
+                        }
+                    }
+                }
+            }
+        }
+        
 
         //던전 메뉴
         static void DungeonMenu()
@@ -159,7 +371,8 @@ namespace _17GroupTextRpgGame
             for (int i = 0; i < numberOfMonsters; i++)
             {
                 _monsters[i] = GenerateRandomMonster();
-            }
+            }         
+            
             //몬스터 배열 정렬
             Array.Sort(_monsters, (m1, m2) => m2.Level.CompareTo(m1.Level));
 
@@ -200,6 +413,7 @@ namespace _17GroupTextRpgGame
             Console.Clear();
             ShowHighlightedText("!! Bettle !!");
             Console.WriteLine();
+
             for (int i = 0; i < Monster.MonsterCnt; i++)
             {
 
@@ -214,6 +428,7 @@ namespace _17GroupTextRpgGame
                     Console.WriteLine($"{i + 1}. Lv.{_monsters[i].Level} {_monsters[i].Name} HP {_monsters[i].Hp}");
                 }
             }
+
 
             Console.WriteLine("\n[내정보]");
             PrintPlayerInfo();
@@ -312,7 +527,6 @@ namespace _17GroupTextRpgGame
 
                 if (randomCorrectAtk >= 1 && randomCorrectAtk < 10)
                 {
-
                     _monsters[keyInput - 1].Hp -= _player.Atk + getSumBonusAtk();
                     Console.WriteLine(_player.Atk + getSumBonusAtk() + "의 데미지로 " + _player.Name + "의 공격");
                     Console.Write(_monsters[keyInput - 1].Name + "의");
@@ -407,6 +621,14 @@ namespace _17GroupTextRpgGame
             _monsters[Monster.MonsterCnt] = monster;
             Monster.MonsterCnt++;
         }
+
+        static void AddBoss(Boss boss) 
+        { 
+            if (Boss.BossCnt == 5) return;
+            _bosses[Boss.BossCnt] = boss;
+            Boss.BossCnt++;
+        }
+
         static void AddItem(Item item)
         {
             if (Item.ItemCnt == 10) return;
