@@ -22,7 +22,7 @@ namespace _17GroupTextRpgGame
             /// 4. 인벤토리 화면을 구현함
             PrintStartLogo();
             GameDataSetting();
-            MonsterSpawn();
+            MonsterSpawn();            
             StartMenu();           
         }
 
@@ -168,7 +168,11 @@ namespace _17GroupTextRpgGame
                 {
                     Console.WriteLine($"{i + 1}. Lv.{_monsters[i].Level} {_monsters[i].Name} HP {_monsters[i].Hp}");
                 }
-            }           
+            }
+            if(CheckAllMonstersDead() == true) 
+            {
+                MonsterSpawn();
+            }
         }
 
         private static Monster GenerateRandomMonster()
@@ -191,14 +195,13 @@ namespace _17GroupTextRpgGame
             Console.Clear();
             ShowHighlightedText("!! Bettle !!");
             Console.WriteLine();
-            for (int i = 0; i < Monster.MonsterRandomCnt; i++)
+            for (int i = 0; i < Monster.MonsterCnt; i++)
             {               
                 if (_monsters[i].Hp == 0)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     Console.WriteLine($"{i + 1}. Lv.{_monsters[i].Level} {_monsters[i].Name} HP {_monsters[i].Hp} (Dead)");
-                    Console.ResetColor();
-                    Console.WriteLine($"{i + 1}. Lv.{_monsters[i].Level} {_monsters[i].Name} HP {_monsters[i].Hp}");
+                    Console.ResetColor();                 
                 }
                 else
                 {
@@ -218,7 +221,7 @@ namespace _17GroupTextRpgGame
                 Console.WriteLine();
             }
 
-            int keyInput = CheckValidInput(0, Monster.MonsterRandomCnt); // 생성된 몬스터 번호를 입력시 그 몬스터와 배틀
+            int keyInput = CheckValidInput(0, Monster.MonsterCnt); // 생성된 몬스터 번호를 입력시 그 몬스터와 배틀
 
             switch (keyInput)
             {
@@ -235,6 +238,17 @@ namespace _17GroupTextRpgGame
             //랜덤하게 소환된 몬스터 1~3마리와 싸우기.  
         }
 
+        static bool CheckAllMonstersDead()
+        {
+            for (int i = 0; i < Monster.MonsterCnt; i++)
+            {
+                if (_monsters[i].Hp > 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         private static void EnemyPhase(int keyInput)
         {
             Console.Clear();
@@ -250,6 +264,7 @@ namespace _17GroupTextRpgGame
                 
                 if (_monsters[keyInput -1].Hp <= 0)
                 {
+                   
                     Console.WriteLine("몬스터를 처치했습니다.");
                     Console.WriteLine();
                     Console.WriteLine("0. 이어서 전투하기");
@@ -397,9 +412,9 @@ namespace _17GroupTextRpgGame
 
         static void AddMonster(Monster monster)
         {
-            if (Monster.MonsterRandomCnt == 5) return;
-            _monsters[Monster.MonsterRandomCnt] = monster;
-            Monster.MonsterRandomCnt++;           
+            if (Monster.MonsterCnt == 5) return;
+            _monsters[Monster.MonsterCnt] = monster;
+            Monster.MonsterCnt++;           
         }
         static void AddItem(Item item)
         {
@@ -592,6 +607,7 @@ namespace _17GroupTextRpgGame
             Console.WriteLine("                           PRESS ANYKEY TO START                             ");
             Console.WriteLine("=============================================================================");
             Console.ReadKey();
+        
         }
     }
 }

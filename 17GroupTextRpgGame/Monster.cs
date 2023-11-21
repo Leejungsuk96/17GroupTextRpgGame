@@ -19,10 +19,10 @@ namespace _17GroupTextRpgGame
         
 
         // 몬스터 랜덤 소환 마리수 체크할 때 사용
-        public static int MonsterRandomCnt = 0;
+        public static int MonsterCnt = 0;
 
 
-        public bool CheckMonsterDead = false;
+        public bool CheckMonsterDead {  get; set; }
 
        
 
