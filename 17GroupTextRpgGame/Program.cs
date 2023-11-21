@@ -12,9 +12,7 @@ namespace _17GroupTextRpgGame
         static Monster _monster2;
         static Monster _monster3;
         static Boss[] _bosses;
-        static Boss _boss1;
-        static Boss _boss2;
-        static Boss _boss3;
+        static Boss _boss;        
 
         static void Main(string[] args)
         {
@@ -72,13 +70,9 @@ namespace _17GroupTextRpgGame
             _monster2 = new Monster("공허충", 3, 10, 0, 100, 100, 200, 2000);
             _monster3 = new Monster("대포미니언", 5, 8, 0, 300, 300, 300, 3000);
             
-            _bosses = new Boss[5];
-            AddBoss(new Boss("전령", 10, 15, 15, 100, 100, 1000, 5000));
-            AddBoss(new Boss("드래곤", 20, 25, 25, 200, 200, 2000, 6000));
-            AddBoss(new Boss("바론", 30, 35, 35, 300, 300, 3000, 7000));
-            _boss1 = new Boss("전령", 10, 15, 15, 100, 100, 1000, 5000);
-            _boss2 = new Boss("드래곤", 20, 25, 25, 200, 200, 2000, 6000);
-            _boss3 = new Boss("바론", 30, 35, 35, 300, 300, 3000, 7000);            
+            _bosses = new Boss[5];            
+            AddBoss(new Boss("바론", 30, 35, 35, 300, 300, 3000, 7000));            
+            _boss = new Boss("바론", 30, 35, 35, 300, 300, 3000, 7000);            
 
             _items = new Item[10];
             AddItem(new Item("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 0, 0, 50));
@@ -145,55 +139,42 @@ namespace _17GroupTextRpgGame
 
             ShowHighlightedText("■보스방에 입장했습니다.■");
             Console.WriteLine();
-            Console.WriteLine("난이도를 선택해주세요");
-            Console.WriteLine("1. Easy");
-            Console.WriteLine("2. Normal");
-            Console.WriteLine("3. Hard");
+            Console.WriteLine("보스가 나타났습니다.");
+            Console.WriteLine();
+            Console.WriteLine("1. 싸우러 가기");
             Console.WriteLine();
             Console.WriteLine("0. 마을로 돌아가기.");
             Console.WriteLine();
 
-            int difficulty = CheckValidInput(0, 3);
 
-            if (difficulty == 0)
-            {
-                StartMenu();
-            }
-            else
-            {
-                BossBattle(difficulty);
-            }
-        }        
-
-        static void BossBattle(int difficulty)
-        {
-            Boss bossToBattle;
-            switch (difficulty)
+            switch (CheckValidInput(0, 1))
             {
                 case 1:
-                    bossToBattle = _boss1; // Easy
+                    BossBattle();
                     break;
-                case 2:
-                    bossToBattle = _boss2; // Normal
+                case 0:
+                    StartMenu();
                     break;
-                default:
-                    bossToBattle = _boss3; // Hard
-                    break;                                  
             }
+        }
 
+        static void BossBattle()
+        {
             Console.Clear();
             ShowHighlightedText("!! Boss Bettle !!");
             Console.WriteLine();
 
-            if (bossToBattle.Hp == 0)
+            if (_boss.Hp == 0)
             {
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.WriteLine($"1. Lv.{bossToBattle.Level} {bossToBattle.Name} HP {bossToBattle.Hp} (Dead)");
+                Console.WriteLine($"Lv.{_boss.Level} {_boss.Name}");
+                Console.WriteLine($"HP {_boss.Hp}/{_boss.Maxhp} (Dead)");
                 Console.ResetColor();
             }
             else
             {
-                Console.WriteLine($"1. Lv.{bossToBattle.Level} {bossToBattle.Name} HP {bossToBattle.Hp}");
+                Console.WriteLine($"Lv.{_boss.Level} {_boss.Name}");
+                Console.WriteLine($"HP {_boss.Hp}/{_boss.Maxhp}");
             }
 
             Console.WriteLine("\n[내정보]");
@@ -203,6 +184,8 @@ namespace _17GroupTextRpgGame
             {
                 Console.WriteLine($"Lv.{_player.Level} {_player.Name} ({_player.Job})");
                 Console.WriteLine($"HP {_player.Hp}/{_player.Maxhp}");
+                Console.WriteLine();
+                Console.WriteLine("1. 공격하기");
                 Console.WriteLine();
                 Console.WriteLine("0. 나가기");
                 Console.WriteLine();
@@ -215,8 +198,8 @@ namespace _17GroupTextRpgGame
                 case 0:
                     BossDungeonMenu();
                     break;
-                case 1:
-                    EnemyPhase2(keyInput);
+                case 1:                    
+                    EnemyPhase2(keyInput);                    
                     break;
             }
         }
@@ -235,14 +218,14 @@ namespace _17GroupTextRpgGame
 
                 if (_bosses[keyInput - 1].Hp <= 0)
                 {
-                    Console.WriteLine("보스를 처치했습니다.");
+                    Console.WriteLine("보스를 처치해 승리하였습니다.");                    
                     Console.WriteLine();
                     Console.WriteLine("0. 나가기");
                     Console.WriteLine();
                     switch (CheckValidInput(0, 0))
                     {
                         case 0:
-                            BossDungeonMenu();
+                            Victory();
                             break;
                     }
                 }
@@ -253,7 +236,7 @@ namespace _17GroupTextRpgGame
 
             while (_bosses[keyInput - 1].Hp > 0 && _player.Hp > 0);
 
-            Console.WriteLine("보스를 처치했습니다.");
+            Console.WriteLine("패배했습니다.");
             Console.WriteLine();
             Console.WriteLine("0. 나가기");
             Console.WriteLine();
@@ -261,7 +244,7 @@ namespace _17GroupTextRpgGame
 
             {
                 case 0:
-                    BossDungeonMenu();
+                    BossBattle();
                     break;
             }
             Console.ReadKey();
@@ -845,6 +828,25 @@ namespace _17GroupTextRpgGame
             Console.ResetColor();
         }
 
+        static void Victory() 
+        {
+            Console.Clear();
+            Console.WriteLine("승리");
+            Console.WriteLine("0. 처음부터 다시하기");
+            Console.WriteLine("1. 마을로 가기");
+
+
+            switch (CheckValidInput(0, 1))
+            {
+                case 0:
+                    GameDataSetting();
+                    break;
+                case 1:
+                    StartMenu();
+                    break;
+            }
+        }
+        
         static void PrintStartLogo()
         {
             // ASCII ART GENERATED BY https://textkool.com/en/ascii-art-generator?hl=default&vl=default&font=Red%20Phoenix
