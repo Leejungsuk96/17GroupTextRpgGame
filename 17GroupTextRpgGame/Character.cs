@@ -10,18 +10,22 @@ namespace _17GroupTextRpgGame
     {
         public string Name { get; }
         public string Job { get; }
-        public int Level { get; }
-        public int Atk { get; }
+        public int Level { get; set; }
+        public int Atk { get; set; }
         public int Def { get; }
         public int Hp { get; set; }
 
-        public int Maxhp { get; }
-        public int Gold { get; }
+        public int Maxhp { get; set; }
+        public int Gold { get; set; }
+
+        public int Exp { get; set; }
 
         //죽음 여부 확인
         public bool CheckDeath => Hp <= 0;
         //if (_player.CheckDeath) return;
 
+        //경험치 1000이상인지 확인
+        public bool CheckExp => Exp >= 1000;
         public Character(string name, string job, int level, int atk, int def, int hp, int maxhp, int gold)
         {
             Name = name;
@@ -32,6 +36,7 @@ namespace _17GroupTextRpgGame
             Hp = hp;
             Maxhp = maxhp;
             Gold = gold;
+            Exp = 0;
         }
     }
 }
