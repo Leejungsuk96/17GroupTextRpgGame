@@ -65,8 +65,8 @@ namespace _17GroupTextRpgGame
             _monster3 = new Monster("대포미니언", 5, 8, 0, 300, 300, 300, 3000);
 
             _bosses = new Boss[5];
-            AddBoss(new Boss("바론", 30, 35, 35, 300, 300, 3000, 7000));
-            _boss = new Boss("바론", 30, 35, 35, 300, 300, 3000, 7000);
+            AddBoss(new Boss("바론", 30, 305, 35, 300, 300, 3000, 7000));
+            _boss = new Boss("바론", 30, 305, 35, 300, 300, 3000, 7000);
 
             _items = new Item[10];
             AddItem(new Item("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 0, 0, 50));
@@ -241,12 +241,79 @@ namespace _17GroupTextRpgGame
 
                 //플레이어나 보스 중 하나의 체력이 0이하이면 전투 종료.
                 if (_player.Hp <= 0)
-                {
-                    Console.WriteLine("전투에서 패배했습니다.");
+                {                    
+                    switch (keyInput)
+                    {
+                        default:
+                            Lose();
+                            break;
+                    }
                 }
                 else if (_boss.Hp <= 0)
+                {                    
+                    switch (keyInput)
+                    {
+                        default:
+                            Win();
+                            break;
+                    }
+                }
+            }
+
+            static void Lose()
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("보스 사냥에 실패했습니다");                
+                Console.WriteLine();
+                Console.WriteLine("[보스 정보]");
+                Console.WriteLine($"Lv.{_boss.Level} {_boss.Name}");
+                Console.WriteLine($"HP {_boss.Hp}/{_boss.Maxhp}");
+                
+                Console.WriteLine("\n[내정보]");
+                PrintPlayerInfo();
+                static void PrintPlayerInfo()
                 {
-                    Console.WriteLine("바론을 쓰러트렸습니다.");
+                    Console.WriteLine($"Lv.{_player.Level} {_player.Name} ({_player.Job})");
+                    Console.WriteLine($"HP {_player.Hp}/{_player.Maxhp}");
+                    Console.WriteLine($"MP {_player.Mp}/{_player.Maxmp}"); ;
+                    Console.ResetColor();
+                    Console.WriteLine();
+                    Console.WriteLine("0. 마을로 돌아가기");                    
+                    Console.WriteLine();                    
+                }
+                switch (CheckValidInput(0, 0))
+                {
+                    default:
+                        StartMenu();
+                        break;
+                }
+            }
+
+            static void Win()
+            {
+                Console.WriteLine("보스를 처치해 승리했습니다");
+                Console.WriteLine();
+                Console.WriteLine("[보스 정보]");
+                Console.WriteLine($"Lv.{_boss.Level} {_boss.Name}");
+                Console.WriteLine($"HP {_boss.Hp}/{_boss.Maxhp}");
+                Console.WriteLine();
+                Console.WriteLine("\n[내정보]");
+                PrintPlayerInfo();
+                static void PrintPlayerInfo()
+                {
+                    Console.WriteLine($"Lv.{_player.Level} {_player.Name} ({_player.Job})");
+                    Console.WriteLine($"HP {_player.Hp}/{_player.Maxhp}");
+                    Console.WriteLine($"MP {_player.Mp}/{_player.Maxmp}"); ;
+                    Console.WriteLine();
+                    Console.WriteLine("0. 끝내기 / 다시하기");
+                    Console.WriteLine();
+                }
+                switch (CheckValidInput(0, 0))
+                {
+                    default:
+                        Victory();
+                        break;
                 }
             }
 
