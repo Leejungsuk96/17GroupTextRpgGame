@@ -178,7 +178,7 @@ namespace _17GroupTextRpgGame
                 case 1:
                     if (_player.Hp <= 0)
                     {
-                        Console.WriteLine("체력이 너무 낮습니다. 싸움보단 치료를 우선시 해주세요");
+                        Console.WriteLine("체력이 너무 낮습니다. 치료 후 도전 해주세요");
                         Console.ReadKey();
                         BossDungeonMenu();
                     }
@@ -194,26 +194,7 @@ namespace _17GroupTextRpgGame
         {
             Console.Clear();
             ShowHighlightedText("!! Boss Bettle !!");
-            Console.WriteLine();
-
-            for (int i = 0; i < Boss.BossCnt; i++)
-            {
-
-                if (_bosses[i].Hp == 0)
-                {
-                    Console.ForegroundColor = ConsoleColor.DarkGray;
-                    Console.WriteLine("[보스 정보]");
-                    Console.WriteLine($"Lv.{_bosses[i].Level} {_bosses[i].Name} (Dead)");
-                    Console.WriteLine($"Hp.{_bosses[i].Hp}/{_bosses[i].Maxhp}");
-                    Console.ResetColor();
-                }
-                else
-                {
-                    Console.WriteLine("[보스 정보]");
-                    Console.WriteLine($"Lv.{_bosses[i].Level} {_bosses[i].Name}");
-                    Console.WriteLine($"Hp.{_bosses[i].Hp}/{_bosses[i].Maxhp}");
-                }
-            }
+            Console.WriteLine();            
 
             while (_boss.Hp > 0 && _player.Hp > 0)
             {
@@ -226,6 +207,7 @@ namespace _17GroupTextRpgGame
                 {
                     Console.WriteLine($"Lv.{_player.Level} {_player.Name} ({_player.Job})");
                     Console.WriteLine($"HP {_player.Hp}/{_player.Maxhp}");
+                    Console.WriteLine($"MP {_player.Mp}/{_player.Maxmp}"); ;
                     Console.WriteLine();
                     Console.WriteLine("1. 공격하기");
                     Console.WriteLine("2. 스킬");
@@ -251,10 +233,8 @@ namespace _17GroupTextRpgGame
                         break;
                 }
 
-
-
                 //플레이어의 행동 후에도 보스가 생존하면 보스의 턴을 진행. 보스 턴 자동 진행.
-                if (_boss.Hp > -0) ;
+                if (_boss.Hp > -0)
                 {
                     BossTurn();
                 }
@@ -266,11 +246,9 @@ namespace _17GroupTextRpgGame
                 }
                 else if (_boss.Hp <= 0)
                 {
-                    Console.WriteLine("보스를 쓰러트렸습니다.");
+                    Console.WriteLine("바론을 쓰러트렸습니다.");
                 }
             }
-
-
 
             // 보스의 턴 동작을 처리하는 메서드
             static void BossTurn()
@@ -280,7 +258,8 @@ namespace _17GroupTextRpgGame
                 int bossDamage = new Random().Next(10, 21);
                 _player.ReceiveDamage(bossDamage);
 
-                Console.WriteLine($"보스가 플레이어를 공격했습니다. 피해: {bossDamage}");
+                Console.WriteLine($"바론이 플레이어를 공격했습니다. 피해: {bossDamage}");
+                Console.WriteLine();
             }
 
             // 플레이어가 스킬을 선택하고 사용할 수 있도록 메서드를 추가합니다.
@@ -307,19 +286,10 @@ namespace _17GroupTextRpgGame
 
                 //화면 초기화
                 Console.Clear();
-
-
-                // 보스의 체력 출력
-                Console.WriteLine($"보스의 체력: {_boss.Hp}/{_boss.Maxhp}");
+                
                 Console.WriteLine();
-                //플레이어의 Hp, MP 출력
-                Console.WriteLine($"{_player.Name}의 HP: {_player.Hp}/{_player.Maxhp}");
-                Console.WriteLine($"{_player.Name}의 MP: {_player.Mp}/{_player.Maxmp}");
+                Console.WriteLine($"플레이어가 {selectedSkill.Name}(으)로 {selectedSkill.Damage}의 피해를 입혔습니다.");                                
                 Console.WriteLine();
-                Console.WriteLine($"플레이어가 {selectedSkill.Name}(으)로 {selectedSkill.Damage}의 피해를 받았습니다. 현재 체력: {_player.Hp}/{_player.Maxhp}");
-                Console.WriteLine($"{_boss.Name}가 {selectedSkill.Damage}의 피해를 받았습니다.");
-
-
             }
 
             //보스 정보 출력을 별도로 분리.
@@ -328,14 +298,16 @@ namespace _17GroupTextRpgGame
                 if (_boss.Hp == 0)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGray;
+                    
+                    Console.WriteLine("[보스 정보]");
                     Console.WriteLine($"Lv.{_boss.Level} {_boss.Name}");
-                    Console.WriteLine($"HP {_boss.Hp}/{_boss.Maxhp} (Dead)");
-                    Console.ResetColor();
+                    Console.WriteLine($"HP {_boss.Hp}/{_boss.Maxhp} (Dead)");                    
                 }
                 else
-                {
+                {                    
+                    Console.WriteLine("[보스 정보]");
                     Console.WriteLine($"Lv.{_boss.Level} {_boss.Name}");
-                    Console.WriteLine($"HP {_boss.Hp}/{_boss.Maxhp}");
+                    Console.WriteLine($"HP {_boss.Hp}/{_boss.Maxhp}");                    
                 }
             }
         }
@@ -350,23 +322,20 @@ namespace _17GroupTextRpgGame
             //보스에게 피해 입힘.
             _boss.ReceiveDamage(playerDamage);
 
-
             ////보스의 체력 출력
             Console.WriteLine($"보스의 체력 : {_boss.Hp}/{_boss.Maxhp}");
             Console.WriteLine();
+
             //플레이어의 MP 출력
             Console.WriteLine($"{_player.Name}의 HP: {_player.Hp}/{_player.Maxhp}");
             Console.WriteLine($"{_player.Name}의 MP: {_player.Mp}/{_player.Maxmp}");
             Console.WriteLine();
-
-
 
             //보스의 체력이 0이하인지 체크
             if (_boss.Hp <= 0)
             {
                 Console.WriteLine($"플레이어가 {_boss.Name}을 처치했습니다.");
                 return;
-
             }
 
             // 보스의 턴 후 플레이어가 패배했는지 확인
@@ -377,14 +346,14 @@ namespace _17GroupTextRpgGame
 
             switch (keyInput)
             {
-                case 1:
-                    // 플레이어가 일반 공격을 선택한 경우
-                    Console.WriteLine("적을 공격합니다.");
+                case 1:                    
                     // 플레이어의 공격 구현
                     int damage = _player.Atk;
                     _boss.ReceiveDamage(damage);
 
-                    Console.WriteLine($"플레이어가 공격했습니다. 피해: {damage}");
+                    Console.Clear();
+                    Console.WriteLine($"플레이어가 바론을 공격했습니다. 피해: {damage}");
+                    Console.WriteLine();
                     break;
 
                 default:
@@ -502,7 +471,7 @@ namespace _17GroupTextRpgGame
                 case 1:
                     if (_player.Hp <= 0)
                     {
-                        Console.WriteLine("체력이 너무 낮습니다. 싸움보단 치료를 우선시 해주세요");
+                        Console.WriteLine("체력이 너무 낮습니다. 치료 후 도전해주세요");
                         Console.ReadKey();
                         DungeonMenu();
                     }
