@@ -47,9 +47,9 @@ namespace _17GroupTextRpgGame
             Console.WriteLine("원하는 직업을 선택해주세요.");
             Console.Write(">> ");
             string jobChoice = Console.ReadLine();
-            if (jobChoice == "1") _player = new Character($"{playerName}", "전사", 1, 10, 5, 200, 200, 1500);
-            else if (jobChoice == "2") _player = new Character($"{playerName}", "법사", 1, 20, 5, 100, 100, 1500);
-            else if (jobChoice == "3") _player = new Character($"{playerName}", "도적", 1, 15, 5, 150, 150, 1500);
+            if (jobChoice == "1") _player = new Character($"{playerName}", "전사", 1, 10, 5, 200, 200, 30, 30, 1500);
+            else if (jobChoice == "2") _player = new Character($"{playerName}", "법사", 1, 20, 5, 100, 100, 50, 50, 1500);
+            else if (jobChoice == "3") _player = new Character($"{playerName}", "도적", 1, 15, 5, 150, 150, 40, 40, 1500);
             else
             {
                 Console.WriteLine();
