@@ -150,6 +150,13 @@ namespace _17GroupTextRpgGame
             switch (CheckValidInput(0, 1))
             {
                 case 1:
+                    if (_player.Hp <= 0)
+                    {
+                        Console.WriteLine("체력이 너무 낮습니다. 싸움보단 치료를 우선시 해주세요");
+                        Console.ReadKey();
+                        BossDungeonMenu();
+
+                    }
                     BossBattle();
                     break;
                 case 0:
@@ -198,7 +205,14 @@ namespace _17GroupTextRpgGame
                 case 0:
                     BossDungeonMenu();
                     break;
-                case 1:                    
+                case 1:
+                    if (_player.Hp <= 0)
+                    {
+                        Console.WriteLine("체력이 너무 낮습니다. 싸움보단 치료를 우선시 해주세요");
+                        Console.ReadKey();
+                        BossBattle();
+
+                    }
                     EnemyPhase2(keyInput);                    
                     break;
             }
@@ -433,6 +447,13 @@ namespace _17GroupTextRpgGame
                     StartMenu();
                     break;
                 case 1:
+                    if (_player.Hp <= 0)
+                    {
+                        Console.WriteLine("체력이 너무 낮습니다. 싸움보단 치료를 우선시 해주세요");
+                        Console.ReadKey();
+                        DungeonMenu();
+
+                    }
                     StartOfTheBattle();
                     break;                 
             }
@@ -536,6 +557,13 @@ namespace _17GroupTextRpgGame
                     break;
 
                 default:
+                    if (_player.Hp <= 0)
+                    {
+                        Console.WriteLine("체력이 너무 낮습니다. 싸움보단 치료를 우선시 해주세요");
+                        Console.ReadKey();
+                        StartOfTheBattle();
+                        
+                    }
                     EnemyPhase(keyInput);
                     break;
             }
