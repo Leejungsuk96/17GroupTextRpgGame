@@ -32,5 +32,17 @@ namespace _17GroupTextRpgGame
             Exp = exp;
             Gold = gold;
         }
+
+        public void ReceiveDamage(int damage)
+        {
+            // 보스의 체력 감소
+            Hp -= damage;
+
+            // 체력이 음수가 되지 않도록 보정
+            if (Hp < 0)
+            {
+                Hp = 0;
+            }
+        }
     }
 }

@@ -69,5 +69,38 @@ namespace _17GroupTextRpgGame
                 Skills.Add(new Skill("마무리 일격", 30, 10));
             }
         }
+
+        public void UseSkill(Skill skill, Boss boss)
+        {
+            //스킬 사용 전에 MP 확인
+            if (Mp < skill.MpCost)
+            {
+                Console.WriteLine("마나가 부족합니다.");
+                return;
+            }
+
+            //스킬 사용
+            Console.WriteLine($"{Name}이(가) {skill.Name} 스킬을 사용합니다.");
+            boss.ReceiveDamage(skill.Damage);
+
+            //플레이어의 MP 감소
+            Mp -= skill.MpCost;
+            if (Mp < 0)
+            {
+                Mp = 0;
+            }
+        }
+
+        public void ReceiveDamage(int damage)
+        {
+            // 플레이어가 피해를 받을 때 호출되는 메서드
+            Hp -= damage;
+            if (Hp < 0)
+            {
+                Hp = 0; // 체력이 음수로 가지 않도록 보정
+            }
+
+            Console.WriteLine($"플레이어가 {damage}의 피해를 받았습니다. 현재 체력: {Hp}/{Maxhp}");
+        }
     }
 }

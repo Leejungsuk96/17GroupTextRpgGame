@@ -189,106 +189,126 @@ namespace _17GroupTextRpgGame
                 }
             }
 
-            Console.WriteLine("\n[내정보]");
-            PrintPlayerInfo();
-
-            static void PrintPlayerInfo()
+            while (_boss.Hp > 0 && _player.Hp > 0)
             {
-                Console.WriteLine($"Lv.{_player.Level} {_player.Name} ({_player.Job})");
-                Console.WriteLine($"HP {_player.Hp}/{_player.Maxhp}");
-                Console.WriteLine();
-                Console.WriteLine("1. 공격하기");
-                Console.WriteLine();
-                Console.WriteLine("0. 나가기");
-                Console.WriteLine();
+                DisplayBossInfo();
+
+                Console.WriteLine("\n[내정보]");
+                PrintPlayerInfo();
+
+                static void PrintPlayerInfo()
+                {
+                    Console.WriteLine($"Lv.{_player.Level} {_player.Name} ({_player.Job})");
+                    Console.WriteLine($"HP {_player.Hp}/{_player.Maxhp}");
+                    Console.WriteLine();
+                    Console.WriteLine("1. 공격하기");
+                    Console.WriteLine("2. 스킬");
+                    Console.WriteLine("0. 나가기");
+                    Console.WriteLine();
+                }
+
+                int keyInput = CheckValidInput(0, 2);
+
+                switch (keyInput)
+                {
+                    case 0:
+                        BossDungeonMenu();
+                        break;
+                    case 1:
+                        // 플레이어가 공격을 선택한 경우
+                        Console.WriteLine("적을 공격합니다.");
+                        EnemyPhase2(keyInput); // EnemyPhase2 메서드 호출 또는 해당 부분에 공격 구현 추가       
+                        break;
+                    case 2:
+                        // 플레이어가 스킬을 선택한 경우
+                        ChooseSkill();
+                        break;
+                }
+
+
+
+                //플레이어의 행동 후에도 보스가 생존하면 보스의 턴을 진행
+                if (_boss.Hp > -0) ;
+                {
+                    BossTurn();
+                }
+
+                //플레이어나 보스 중 하나의 체력이 0이하이면 전투 종료.
+                if (_player.Hp <= 0)
+                {
+                    Console.WriteLine("전투에서 패배했습니다.");
+                }
+                else if (_boss.Hp <= 0)
+                {
+                    Console.WriteLine("보스를 쓰러트렸습니다.");
+                }
+
             }
 
-            int keyInput = CheckValidInput(0, 1);
-
-            switch (keyInput)
+            // 보스의 턴 동작을 처리하는 메서드
+            static void BossTurn()
             {
-                case 0:
-                    BossDungeonMenu();
-                    break;
-                case 1:
-                    if (_player.Hp <= 0)
-                    {
-                        Console.WriteLine("체력이 너무 낮습니다. 싸움보단 치료를 우선시 해주세요");
-                        Console.ReadKey();
-                        BossBattle();
+                // 보스의 특화된 턴 동작을 구현
+                // 예시로 간단하게 랜덤한 값을 이용하여 플레이어를 공격
+                int bossDamage = new Random().Next(10, 21);
+                _player.ReceiveDamage(bossDamage);
 
-                    }
-                    EnemyPhase2(keyInput);                    
-                    break;
+                Console.WriteLine($"보스가 플레이어를 공격했습니다. 피해: {bossDamage}");
             }
+
+            // 플레이어가 스킬을 선택하고 사용할 수 있도록 메서드를 추가합니다.
+            static void ChooseSkill()
+            {
+                // 플레이어의 직업에 따라 스킬 초기화
+                List<Skill> skills = _player.Skills;
+
+                // 스킬 목록 출력
+                Console.WriteLine("스킬을 선택하세요:");
+
+                for (int i = 0; i < skills.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {skills[i].Name}");
+                }
+
+                int skillInput = CheckValidInput(1, skills.Count);
+
+                // 선택한 스킬에 따라 다른 동작 수행
+                Skill selectedSkill = skills[skillInput - 1];
+
+                // 스킬 사용
+                _player.UseSkill(selectedSkill, _boss);
+
+                //화면 초기화
+                Console.Clear();
+
+                // 보스의 체력 출력
+                Console.WriteLine($"보스의 체력: {_boss.Hp}/{_boss.Maxhp}");
+                // 플레이어의 MP 출력
+                Console.WriteLine($"플레이어의 MP: {_player.Mp}/{_player.Maxmp}");
+                Console.WriteLine($"플레이어가 {selectedSkill.Damage}의 피해를 받았습니다. 현재 체력: {_player.Hp}/{_player.Maxhp}");
+                Console.WriteLine($"{_boss.Name}가 {selectedSkill.Damage}의 피해를 받았습니다.");
+
+            }
+
+            //보스 정보 출력을 별도로 분리.
+            static void DisplayBossInfo()
+            {
+                if (_boss.Hp == 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine($"Lv.{_boss.Level} {_boss.Name}");
+                    Console.WriteLine($"HP {_boss.Hp}/{_boss.Maxhp} (Dead)");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.WriteLine($"Lv.{_boss.Level} {_boss.Name}");
+                    Console.WriteLine($"HP {_boss.Hp}/{_boss.Maxhp}");
+                }
+            }
+
+
         }
-
-        // 플레이어가 스킬을 선택하고 사용할 수 있도록 메서드를 추가합니다.
-        static Skill ChooseSkill()
-        {
-            ShowSkills();
-
-            Console.WriteLine("0. 뒤로 가기");
-            Console.WriteLine();
-
-            int skillInput = CheckValidInput(0, _player.Skills.Count);
-
-            if (skillInput == 0)
-            {
-                return null; // 플레이어가 뒤로 가기를 선택한 경우
-            }
-
-            // 선택한 스킬을 반환합니다.
-            return _player.Skills[skillInput - 1];
-        }
-
-        //스킬 목록 보여주기.
-        static void ShowSkills()
-        {
-            Console.WriteLine("\n[스킬 목록]");
-            for (int i = 0; i < _player.Skills.Count; i++)
-            {
-                Skill skill = _player.Skills[i];
-                Console.WriteLine($"{i + 1}, {skill.Name} (데미지: {skill.Damage}, 소비 MP : {skill.MpCost})");
-            }
-            Console.WriteLine();
-        }
-
-        // 플레이어가 보스에게 스킬을 사용하는 메서드
-        static void PlayerUseSkill(Skill skill, Boss boss)
-        {
-            Console.Clear();
-            Console.WriteLine($"플레이어가 {boss.Name}에게 {skill.Name}을 사용합니다.");
-
-            if (_player.Mp >= skill.MpCost)
-            {
-                // 플레이어의 MP가 충분한 경우에만 스킬 사용
-                boss.Hp -= skill.Damage;
-                _player.Mp -= skill.MpCost;
-
-                Console.WriteLine($"플레이어가 {skill.Name}을 사용하여 {skill.Damage}의 데미지를 입힙니다.");
-                Console.WriteLine($"{boss.Name}의 남은 체력: {boss.Hp}");
-                Console.WriteLine($"플레이어의 남은 MP: {_player.Mp}");
-                Console.WriteLine("");
-                Console.WriteLine("0. 뒤로 가기");
-            }
-            else
-            {
-                Console.WriteLine("MP가 부족하여 스킬을 사용할 수 없습니다.");
-                Console.WriteLine("");
-                Console.WriteLine("0. 뒤로 가기");
-            }
-
-            int input = CheckValidInput(0, 0);
-
-            if (input == 0)
-            {
-                // 사용자가 0을 선택하면 뒤로 가기
-
-            }
-        }
-
-
 
 
 
@@ -305,20 +325,6 @@ namespace _17GroupTextRpgGame
                 Console.ReadKey();
                 Console.WriteLine();
                 PlayerAtkToBoss(keyInput);
-                Console.WriteLine();
-
-                // 플레이어가 보스에게 스킬을 사용
-                Skill selectedSkill = ChooseSkill();
-
-                if (selectedSkill == null)
-                {
-                    // 플레이어가 뒤로 가기를 선택한 경우
-                    BossDungeonMenu();
-                    return;
-                }
-
-                // 선택한 스킬을 사용합니다.
-                PlayerUseSkill(selectedSkill, _bosses[keyInput - 1]);
                 Console.WriteLine();
 
 
@@ -338,9 +344,6 @@ namespace _17GroupTextRpgGame
                 Console.ReadKey();
                 BossAtkToPlayer(keyInput);
                 Console.WriteLine();
-
-
-                
 
             }
 
