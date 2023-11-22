@@ -65,8 +65,8 @@ namespace _17GroupTextRpgGame
             _monster3 = new Monster("대포미니언", 5, 8, 0, 300, 300, 300, 3000);
 
             _bosses = new Boss[5];
-            AddBoss(new Boss("바론", 30, 305, 35, 300, 300, 3000, 7000));
-            _boss = new Boss("바론", 30, 305, 35, 300, 300, 3000, 7000);
+            AddBoss(new Boss("바론", 30, 30, 35, 300, 300, 3000, 7000));
+            _boss = new Boss("바론", 30, 30, 35, 300, 300, 3000, 7000);
 
             _items = new Item[10];
             AddItem(new Item("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", 0, 0, 0, 50));
