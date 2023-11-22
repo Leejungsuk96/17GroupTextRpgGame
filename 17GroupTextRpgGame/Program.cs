@@ -624,6 +624,7 @@ namespace _17GroupTextRpgGame
                         Console.WriteLine();
                         Console.WriteLine($"HP가 10 증가하였습니다.");
                         Console.WriteLine($"ATK이 2 증가하였습니다.");
+                        _player.Exp = 0;  //경험치 초기화
                     }
                     Console.WriteLine();
                     Console.WriteLine("0. 이어서 전투하기");
