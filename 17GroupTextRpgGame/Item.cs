@@ -18,7 +18,6 @@ namespace _17GroupTextRpgGame
         public int Def { get; }
         public int Hp { get; }
 
-
         public bool IsEquiped { get; set; }
 
         public static int ItemCnt = 0;

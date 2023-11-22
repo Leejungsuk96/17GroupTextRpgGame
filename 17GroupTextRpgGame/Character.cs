@@ -21,7 +21,6 @@ namespace _17GroupTextRpgGame
         public int Mp { get; set; }
         public int Maxmp { get; }
 
-
         public int Gold { get; set; }
 
         public int Exp { get; set; }
@@ -33,7 +32,6 @@ namespace _17GroupTextRpgGame
         //스킬 리스트
         public List<Skill> Skills { get; set; }
         public bool UsedSkillThisTurn { get; set; } // 스킬 사용 여부
-
 
         //경험치 1000이상인지 확인
         public bool CheckExp => Exp >= 1000;
@@ -99,7 +97,6 @@ namespace _17GroupTextRpgGame
             {
                 Hp = 0; // 체력이 음수로 가지 않도록 보정
             }
-
             Console.WriteLine($"플레이어가 {damage}의 피해를 받았습니다. 현재 체력: {Hp}/{Maxhp}");
         }
     }
