@@ -650,10 +650,20 @@ namespace _17GroupTextRpgGame
 
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.DarkRed;
-                _player.Hp -= _monsters[keyInput - 1].Atk;
+                _player.Hp -= _monsters[keyInput - 1].Atk;               
                 Console.WriteLine(_monsters[keyInput - 1].Atk+"의 데미지로 " + _monsters[keyInput - 1].Name + "의 공격");
-                Console.ResetColor();
-                Console.Write(_player.Name + "의 체력이 " + (_player.Hp + getSumBonusHp()) + "만큼 남았습니다.");                
+                Console.ResetColor();                
+                if (_player.Hp < 0)
+                {
+                    _player.Hp = 0;
+                    Console.Write(_player.Name + "의 체력이 " + (_player.Hp + getSumBonusHp()) + "만큼 남았습니다.");
+                    Console.WriteLine();
+                    Console.WriteLine("패배했습니다.");
+                }
+                else
+                {
+                    Console.Write(_player.Name + "의 체력이 " + (_player.Hp + getSumBonusHp()) + "만큼 남았습니다.");
+                }
             }
             
             static void PlayerAtkToMonster(int keyInput)
