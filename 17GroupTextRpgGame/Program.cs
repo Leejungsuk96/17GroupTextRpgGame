@@ -93,9 +93,12 @@ namespace _17GroupTextRpgGame
             Console.WriteLine("2. 인벤토리");
             Console.WriteLine("3. 던전 입장");
             Console.WriteLine("4. 보스방 입장");
+            Console.WriteLine("5. 체력회복하기(1000골드 소모)");
+            Console.WriteLine("6. 마나회복하기(1000골드 소모)");
+
             Console.WriteLine();
 
-            switch (CheckValidInput(1, 4))
+            switch (CheckValidInput(1, 6))
             {
                 case 1:
                     StatusMenu();
@@ -109,8 +112,54 @@ namespace _17GroupTextRpgGame
                 case 4:
                     BossDungeonMenu();
                     break;
+                case 5:
+                    PlayerHpHeal();
+                    break;
+                case 6:
+                    PlayerMpHeal();
+                    break;
             }
         }
+
+        private static void PlayerMpHeal() //플레이어 마나 회복
+        {
+            Console.Clear();
+            if (_player.Hp == _player.Maxhp)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("더 이상 마나를 회복할 수 없습니다.");
+                Console.ResetColor();
+            }
+            else
+            {
+                _player.Mp = _player.Maxmp;
+                _player.Gold -= 1000;
+                Console.WriteLine("1000골드를 사용하여 마나를 회복하였습니다.");
+            }
+            Console.WriteLine("마을로 돌아갑니다.");
+            Console.ReadLine();
+            StartMenu();
+        }
+        private static void PlayerHpHeal() //플레이어 체력 회복
+        {
+            Console.Clear();
+            if (_player.Hp == _player.Maxhp)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("더 이상 체력을 회복할 수 없습니다.");
+                Console.ResetColor();
+            }
+            else
+            {
+                _player.Hp = _player.Maxhp;
+                _player.Gold -= 1000;
+                Console.WriteLine("1000골드를 사용하여 체력을 회복하였습니다.");
+            }
+            Console.WriteLine("마을로 돌아갑니다.");
+            Console.ReadLine();
+            StartMenu();
+        }
+
         static void BossDungeonMenu()
         {
             Console.Clear();
