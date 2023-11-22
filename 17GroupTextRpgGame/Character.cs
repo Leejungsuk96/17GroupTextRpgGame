@@ -97,7 +97,6 @@ namespace _17GroupTextRpgGame
             {
                 Hp = 0; // 체력이 음수로 가지 않도록 보정
             }
-            Console.WriteLine($"플레이어가 {damage}의 피해를 받았습니다. 현재 체력: {Hp}/{Maxhp}");
         }
     }
 }

@@ -198,6 +198,7 @@ namespace _17GroupTextRpgGame
 
             for (int i = 0; i < Boss.BossCnt; i++)
             {
+
                 if (_bosses[i].Hp == 0)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGray;
@@ -224,7 +225,7 @@ namespace _17GroupTextRpgGame
                 static void PrintPlayerInfo()
                 {
                     Console.WriteLine($"Lv.{_player.Level} {_player.Name} ({_player.Job})");
-                    Console.WriteLine($"HP {_player.Hp + getSumBonusHp()}/{_player.Maxhp + getSumBonusHp()}");
+                    Console.WriteLine($"HP {_player.Hp}/{_player.Maxhp}");
                     Console.WriteLine();
                     Console.WriteLine("1. 공격하기");
                     Console.WriteLine("2. 스킬");
@@ -242,7 +243,7 @@ namespace _17GroupTextRpgGame
                     case 1:
                         // 플레이어가 공격을 선택한 경우
                         Console.WriteLine("적을 공격합니다.");
-                        EnemyPhase2(keyInput); // EnemyPhase2 메서드 호출 또는 해당 부분에 공격 구현 추가       
+                        EnemyPhase2(keyInput);
                         break;
                     case 2:
                         // 플레이어가 스킬을 선택한 경우
@@ -250,8 +251,10 @@ namespace _17GroupTextRpgGame
                         break;
                 }
 
-                //플레이어의 행동 후에도 보스가 생존하면 보스의 턴을 진행
-                if (_boss.Hp > -0)
+
+
+                //플레이어의 행동 후에도 보스가 생존하면 보스의 턴을 진행. 보스 턴 자동 진행.
+                if (_boss.Hp > -0) ;
                 {
                     BossTurn();
                 }
@@ -266,6 +269,8 @@ namespace _17GroupTextRpgGame
                     Console.WriteLine("보스를 쓰러트렸습니다.");
                 }
             }
+
+
 
             // 보스의 턴 동작을 처리하는 메서드
             static void BossTurn()
@@ -303,12 +308,17 @@ namespace _17GroupTextRpgGame
                 //화면 초기화
                 Console.Clear();
 
+
                 // 보스의 체력 출력
                 Console.WriteLine($"보스의 체력: {_boss.Hp}/{_boss.Maxhp}");
-                // 플레이어의 MP 출력
-                Console.WriteLine($"플레이어의 MP: {_player.Mp}/{_player.Maxmp}");
-                Console.WriteLine($"플레이어가 {selectedSkill.Damage}의 피해를 받았습니다. 현재 체력: {_player.Hp}/{_player.Maxhp}");
+                Console.WriteLine();
+                //플레이어의 Hp, MP 출력
+                Console.WriteLine($"{_player.Name}의 HP: {_player.Hp}/{_player.Maxhp}");
+                Console.WriteLine($"{_player.Name}의 MP: {_player.Mp}/{_player.Maxmp}");
+                Console.WriteLine();
+                Console.WriteLine($"플레이어가 {selectedSkill.Name}(으)로 {selectedSkill.Damage}의 피해를 받았습니다. 현재 체력: {_player.Hp}/{_player.Maxhp}");
                 Console.WriteLine($"{_boss.Name}가 {selectedSkill.Damage}의 피해를 받았습니다.");
+
 
             }
 
@@ -333,53 +343,73 @@ namespace _17GroupTextRpgGame
         static void EnemyPhase2(int keyInput)
         {
             Console.Clear();
-            Console.Write(_bosses[keyInput - 1].Name);
-            Console.WriteLine(_bosses[keyInput - 1].Hp);
 
-            do
+            //플레이어의 일반 공격.
+            int playerDamage = _player.Atk;
+
+            //보스에게 피해 입힘.
+            _boss.ReceiveDamage(playerDamage);
+
+
+            ////보스의 체력 출력
+            Console.WriteLine($"보스의 체력 : {_boss.Hp}/{_boss.Maxhp}");
+            Console.WriteLine();
+            //플레이어의 MP 출력
+            Console.WriteLine($"{_player.Name}의 HP: {_player.Hp}/{_player.Maxhp}");
+            Console.WriteLine($"{_player.Name}의 MP: {_player.Mp}/{_player.Maxmp}");
+            Console.WriteLine();
+
+
+
+            //보스의 체력이 0이하인지 체크
+            if (_boss.Hp <= 0)
             {
-                Console.ReadKey();
-                Console.WriteLine();
-                PlayerAtkToBoss(keyInput);
-                Console.WriteLine();
-
-                if (_bosses[keyInput - 1].Hp <= 0)
-                {
-                    Console.WriteLine("보스를 처치해 승리하였습니다.");
-                    Console.WriteLine();
-                    Console.WriteLine("0. 나가기");
-                    Console.WriteLine();
-                    switch (CheckValidInput(0, 0))
-                    {
-                        case 0:
-                            Victory();
-                            break;
-                    }
-                }
-
-                Console.ReadKey();
-                BossAtkToPlayer(keyInput);
-                Console.WriteLine();
+                Console.WriteLine($"플레이어가 {_boss.Name}을 처치했습니다.");
+                return;
 
             }
 
-            while (_bosses[keyInput - 1].Hp > 0 && _player.Hp > 0);
-
-            Console.WriteLine("패배했습니다.");
-            Console.WriteLine();
-            Console.WriteLine("0. 나가기");
-            Console.WriteLine();
-
-            switch (CheckValidInput(0, 0))
-
+            // 보스의 턴 후 플레이어가 패배했는지 확인
+            if (_player.Hp <= 0)
             {
-                case 0:
-                    BossBattle();
+                Console.WriteLine("전투에서 패배했습니다.");
+            }
+
+            switch (keyInput)
+            {
+                case 1:
+                    // 플레이어가 일반 공격을 선택한 경우
+                    Console.WriteLine("적을 공격합니다.");
+                    // 플레이어의 공격 구현
+                    int damage = _player.Atk;
+                    _boss.ReceiveDamage(damage);
+
+                    Console.WriteLine($"플레이어가 공격했습니다. 피해: {damage}");
+                    break;
+
+                default:
+                    Console.WriteLine("올바른 행동을 선택하세요.");
                     break;
             }
 
-            Console.ReadKey();
+            //보스 정보 출력을 별도로 분리.
+            static void DisplayBossInfo()
+            {
+                if (_boss.Hp == 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine($"Lv.{_boss.Level} {_boss.Name}");
+                    Console.WriteLine($"HP {_boss.Hp}/{_boss.Maxhp} (Dead)");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.WriteLine($"Lv.{_boss.Level} {_boss.Name}");
+                    Console.WriteLine($"HP {_boss.Hp}/{_boss.Maxhp}");
+                }
+            }
 
+            //보스의 턴.
             static void BossAtkToPlayer(int keyInput)
             {
                 Console.Clear();
@@ -390,6 +420,7 @@ namespace _17GroupTextRpgGame
                 Console.Write(_player.Name + "의 체력이 " + _player.Hp + "만큼 남았습니다.");
             }
 
+            //일반 공격을 할 경우.
             static void PlayerAtkToBoss(int keyInput)
             {
                 Console.Clear();
@@ -399,9 +430,11 @@ namespace _17GroupTextRpgGame
                 if (randomCorrectAtk >= 1 && randomCorrectAtk < 10)
                 {
                     _bosses[keyInput - 1].Hp -= _player.Atk + getSumBonusAtk();
+
                     Console.WriteLine(_player.Atk + getSumBonusAtk() + "의 데미지로 " + _player.Name + "의 공격");
                     Console.Write(_bosses[keyInput - 1].Name + "의");
 
+                    //보스의 체력 출력.
                     if (_bosses[keyInput - 1].Hp < 0)
                     {
                         _bosses[keyInput - 1].Hp = 0;
