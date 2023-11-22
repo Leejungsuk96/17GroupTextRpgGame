@@ -257,7 +257,6 @@ namespace _17GroupTextRpgGame
                 // 예시로 간단하게 랜덤한 값을 이용하여 플레이어를 공격
                 int bossDamage = new Random().Next(10, 21);
                 _player.ReceiveDamage(bossDamage);
-
                 Console.WriteLine($"바론이 플레이어를 공격했습니다. 피해: {bossDamage}");
                 Console.WriteLine();
             }
@@ -348,8 +347,7 @@ namespace _17GroupTextRpgGame
             {
                 case 1:                    
                     // 플레이어의 공격 구현
-                    int damage = _player.Atk;
-                    _boss.ReceiveDamage(damage);
+                    int damage = _player.Atk;                    
 
                     Console.Clear();
                     Console.WriteLine($"플레이어가 바론을 공격했습니다. 피해: {damage}");
@@ -359,96 +357,7 @@ namespace _17GroupTextRpgGame
                 default:
                     Console.WriteLine("올바른 행동을 선택하세요.");
                     break;
-            }
-
-            //보스 정보 출력을 별도로 분리.
-            static void DisplayBossInfo()
-            {
-                if (_boss.Hp == 0)
-                {
-                    Console.ForegroundColor = ConsoleColor.DarkGray;
-                    Console.WriteLine($"Lv.{_boss.Level} {_boss.Name}");
-                    Console.WriteLine($"HP {_boss.Hp}/{_boss.Maxhp} (Dead)");
-                    Console.ResetColor();
-                }
-                else
-                {
-                    Console.WriteLine($"Lv.{_boss.Level} {_boss.Name}");
-                    Console.WriteLine($"HP {_boss.Hp}/{_boss.Maxhp}");
-                }
-            }
-
-            //보스의 턴.
-            static void BossAtkToPlayer(int keyInput)
-            {
-                Console.Clear();
-                Console.ForegroundColor = ConsoleColor.DarkRed;
-                _player.Hp -= _bosses[keyInput - 1].Atk;
-                Console.WriteLine(_bosses[keyInput - 1].Atk + "의 데미지로 " + _bosses[keyInput - 1].Name + "의 공격");
-                Console.ResetColor();
-                Console.Write(_player.Name + "의 체력이 " + _player.Hp + "만큼 남았습니다.");
-            }
-
-            //일반 공격을 할 경우.
-            static void PlayerAtkToBoss(int keyInput)
-            {
-                Console.Clear();
-                int randomCorrectAtk = new Random().Next(1, 11);
-                int randomChangeAtk = new Random().Next(1, 3);
-
-                if (randomCorrectAtk >= 1 && randomCorrectAtk < 10)
-                {
-                    _bosses[keyInput - 1].Hp -= _player.Atk + getSumBonusAtk();
-
-                    Console.WriteLine(_player.Atk + getSumBonusAtk() + "의 데미지로 " + _player.Name + "의 공격");
-                    Console.Write(_bosses[keyInput - 1].Name + "의");
-
-                    //보스의 체력 출력.
-                    if (_bosses[keyInput - 1].Hp < 0)
-                    {
-                        _bosses[keyInput - 1].Hp = 0;
-                        Console.WriteLine("체력이 " + _bosses[keyInput - 1].Hp + "만큼 남았습니다.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("체력이 " + _bosses[keyInput - 1].Hp + "만큼 남았습니다.");
-                    }
-                }
-
-                else
-                {
-                    double value = (double)(_player.Atk + getSumBonusAtk()) / 10;
-                    if (randomChangeAtk == 2)
-                    {
-                        _bosses[keyInput - 1].Hp -= _player.Atk + getSumBonusAtk();
-                        Console.WriteLine(_player.Atk + getSumBonusAtk() + Math.Ceiling(value) + "의 데미지로 " + _player.Name + "의 공격");
-                        Console.Write(_bosses[keyInput - 1].Name);
-                        Console.WriteLine();
-                        if (_bosses[keyInput - 1].Hp < 0)
-                        {
-                            _bosses[keyInput - 1].Hp = 0;
-                            Console.WriteLine(_bosses[keyInput - 1].Hp);
-                        }
-                        else
-                        {
-                            Console.WriteLine(_bosses[keyInput - 1].Hp);
-                        }
-                    }
-
-                    else if (randomChangeAtk == 1)
-                    {
-                        _bosses[keyInput - 1].Hp -= _player.Atk + getSumBonusAtk();
-                        Console.WriteLine(_player.Atk + getSumBonusAtk() - Math.Ceiling(value) + "의 데미지로 " + _player.Name + "의 공격");
-                        Console.Write(_bosses[keyInput - 1].Name);
-
-                        if (_bosses[keyInput - 1].Hp < 0)
-                        {
-                            _bosses[keyInput - 1].Hp = 0;
-                            Console.WriteLine(_bosses[keyInput - 1].Hp);
-                        }
-                    }
-                }
-            }
+            }            
         }
 
         //던전 메뉴
@@ -734,6 +643,7 @@ namespace _17GroupTextRpgGame
                 }
             }
         }
+
         static bool MonsterAllDead()
         {
             for (int i = 0; i < Monster.MonsterCnt; i++)
