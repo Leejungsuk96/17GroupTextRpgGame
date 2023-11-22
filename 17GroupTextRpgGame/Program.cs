@@ -643,8 +643,7 @@ namespace _17GroupTextRpgGame
             }
 
             while (_monsters[keyInput - 1].Hp > 0 && (_player.Hp + getSumBonusHp()) > 0);
-
-            Console.WriteLine("몬스터를 처치했습니다.");
+            
             Console.WriteLine();
             Console.WriteLine("0. 나가기");
             Console.WriteLine();
