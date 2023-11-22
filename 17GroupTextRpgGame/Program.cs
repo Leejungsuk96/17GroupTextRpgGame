@@ -61,7 +61,7 @@ namespace _17GroupTextRpgGame
                 GameDataSetting();
             }
 
-            //몬스터 3마리.
+            //몬스터 3마리
             _monsters = new Monster[5];
             AddMonster(new Monster("미니언", 2, 4, 0, 150, 150, 100, 1000));
             AddMonster(new Monster("공허충", 3, 10, 0, 100, 100, 150, 1500));
@@ -146,7 +146,6 @@ namespace _17GroupTextRpgGame
             Console.WriteLine("0. 마을로 돌아가기.");
             Console.WriteLine();
 
-
             switch (CheckValidInput(0, 1))
             {
                 case 1:
@@ -156,7 +155,7 @@ namespace _17GroupTextRpgGame
                         Console.ReadKey();
                         BossDungeonMenu();
 
-                    }
+                    }                    
                     BossBattle();
                     break;
                 case 0:
@@ -171,17 +170,23 @@ namespace _17GroupTextRpgGame
             ShowHighlightedText("!! Boss Bettle !!");
             Console.WriteLine();
 
-            if (_boss.Hp == 0)
+            for (int i = 0; i < Boss.BossCnt; i++)
             {
-                Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.WriteLine($"Lv.{_boss.Level} {_boss.Name}");
-                Console.WriteLine($"HP {_boss.Hp}/{_boss.Maxhp} (Dead)");
-                Console.ResetColor();
-            }
-            else
-            {
-                Console.WriteLine($"Lv.{_boss.Level} {_boss.Name}");
-                Console.WriteLine($"HP {_boss.Hp}/{_boss.Maxhp}");
+
+                if (_bosses[i].Hp == 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine("[보스 정보]");
+                    Console.WriteLine($"Lv.{_bosses[i].Level} {_bosses[i].Name} (Dead)");
+                    Console.WriteLine($"Hp.{_bosses[i].Hp}/{_bosses[i].Maxhp}");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.WriteLine("[보스 정보]");
+                    Console.WriteLine($"Lv.{_bosses[i].Level} {_bosses[i].Name}");
+                    Console.WriteLine($"Hp.{_bosses[i].Hp}/{_bosses[i].Maxhp}");
+                }
             }
 
             Console.WriteLine("\n[내정보]");
@@ -218,9 +223,6 @@ namespace _17GroupTextRpgGame
             }
         }
 
-
-
-
         // 플레이어가 스킬을 선택하고 사용할 수 있도록 메서드를 추가합니다.
         static Skill ChooseSkill()
         {
@@ -251,7 +253,6 @@ namespace _17GroupTextRpgGame
             }
             Console.WriteLine();
         }
-
 
         // 플레이어가 보스에게 스킬을 사용하는 메서드
         static void PlayerUseSkill(Skill skill, Boss boss)
